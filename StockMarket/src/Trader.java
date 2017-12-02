@@ -3,6 +3,9 @@ import java.util.Scanner;
 public class Trader {
 	// trader deposit
 	private static CustomerProfile customer = null;
+	static int account_SID = 0;
+	static int account_MID = 0;
+	static int trans_ID = 0;
 
 	public static void traderInit() {
 		int control = 1;
@@ -52,9 +55,10 @@ public class Trader {
 		String password = scanner.nextLine();
 		System.out.println("Your password is " + password);
 		Communications.setCustomerProfile(username, name, state, phone_number, email_address, taxid, password);
-		int account_mid = 0;
-		int transID = 0; // for transaction tables?
-		Communications.setMarketAccount(account_mid, 0, transID, username);
+		Communications.setMarketAccount(account_MID, 0, trans_ID, username);
+		deposit(1000);
+		account_MID++;
+		trans_ID++;
 	}
 
 	private static void login() {
@@ -80,35 +84,35 @@ public class Trader {
 			int choice = scanner.nextInt();
 			if (choice == 0) {
 				System.out.println("Enter the amount you want to deposit: ");
-				int deposit = scanner.nextInt();
+				double deposit = scanner.nextInt();
 				System.out.println("Deposit: " + deposit);
 				deposit(deposit);
 			} else if (choice == 1) {
 				System.out.println("Enter the amount you want to withdraw: ");
-				int withdraw = scanner.nextInt();
+				double withdraw = scanner.nextInt();
 				System.out.println("Withdraw: " + withdraw);
 				withdraw(withdraw);
 			} else if (choice == 2) {
 				System.out.println("What stock do you want to buy?: ");
-				int stock_id = scanner.nextInt();
+				String stock_id = scanner.nextLine();
 				System.out.println("How many stocks do you want to buy?: ");
-				int stockQuantity = scanner.nextInt();
+				double stockQuantity = scanner.nextInt();
 				buy(stock_id, stockQuantity);
 			} else if (choice == 3) {
 				System.out.println("What stock do you want to sell?: ");
-				int stock_id = scanner.nextInt();
+				String stock_id = scanner.nextLine();
 				System.out.println("How many stocks do you want to sell?: ");
-				int stockQuantity = scanner.nextInt();
+				double stockQuantity = scanner.nextInt();
 				sell(stock_id, stockQuantity);
 			} else if (choice == 4) {
 				showBalance();
 			} else if (choice == 5) {
 				System.out.println("Which stock history do you want to see?: ");
-				int stock_id = scanner.nextInt();
+				String stock_id = scanner.nextLine();
 				showTransactionHistory(stock_id);
 			} else if (choice == 6) {
 				System.out.println("Which profile do you want to see?: ");
-				int stock_id = scanner.nextInt();
+				String stock_id = scanner.nextLine();
 				showProfile(stock_id);
 			} else if (choice == 7) {
 				movieInfo(0);
@@ -118,45 +122,41 @@ public class Trader {
 		}
 	}
 
-	private static void deposit(int deposit) {
+	private static void deposit(double deposit) {
 		MarketAccounts marketAccount = Communications.getMarketAccount(customer.getUsername());
-		int change = marketAccount.getBalance() + deposit; // check for below 0 balance
-		Communications.updateMarketAccount(marketAccount.getAccountMID(), marketAccount.getBalance(),
-				marketAccount.getTransID(), marketAccount.getUsername(), change);
+		double change = marketAccount.getBalance() + deposit; // check for below 0 balance
+		Communications.updateMarketAccount(marketAccount.getAccountMID(), marketAccount.getTransID(),
+				marketAccount.getUsername(), change);
 	}
 
-	private static void withdraw(int withdraw) {
+	private static void withdraw(double withdraw) {
 		MarketAccounts marketAccount = Communications.getMarketAccount(customer.getUsername());
-		int change = marketAccount.getBalance() + withdraw; // check for below 0 balance
-		Communications.updateMarketAccount(marketAccount.getAccountMID(), marketAccount.getBalance(),
-				marketAccount.getTransID(), marketAccount.getUsername(), change);
+		double change = marketAccount.getBalance() + withdraw; // check for below 0 balance
+		Communications.updateMarketAccount(marketAccount.getAccountMID(), marketAccount.getTransID(),
+				marketAccount.getUsername(), change);
 	}
 
-	private static void buy(int stock_id, int stockQuantity) {
+	private static void buy(String stock_id, double stockQuantity) {
 		Stocks stock = Communications.getStock(stock_id);
-		int price = stock.getCurrentPrice() * stockQuantity + 20;
+		double price = stock.getCurrentPrice() * stockQuantity + 20;
 
 		StockAccounts stockAccount = Communications.getStockAccount(customer.getUsername());
 		if (stockAccount == null) {
-			Communications.setStockAccount(0, 0, 0, 0, 0, 0, "0"); // add stats
-			stockAccount = Communications.getStockAccount(customer.getUsername()); // multiple stock accounts possible
-		} else {
-			// Communications.updateStockAccount();
+			Communications.setStockAccount(account_SID, stock_id, stockQuantity, stock.getCurrentPrice(), 0, trans_ID, customer.getUsername()); // add stats
+			account_SID++;
+			trans_ID++;
+			stockAccount = Communications.getStockAccount(customer.getUsername()); // multiple stock accounts possible, rewrite sql query to hold stock_id?
 		}
+		// Communications.updateStockAccount();
 		withdraw(price);
 	}
 
-	private static void sell(int stock_id, int stockQuantity) {
+	private static void sell(String stock_id, double stockQuantity) {
 		Stocks stock = Communications.getStock(stock_id);
-		int price = stock.getCurrentPrice() * stockQuantity - 20;
+		double price = stock.getCurrentPrice() * stockQuantity - 20;
 
 		StockAccounts stockAccount = Communications.getStockAccount(customer.getUsername());
-		if (stockAccount == null) {
-			Communications.setStockAccount(0, 0, 0, 0, 0, 0, "0"); // add stats
-			stockAccount = Communications.getStockAccount(customer.getUsername());
-		} else {
-			// Communications.updateStockAccount();
-		}
+		Communications.updateStockAccount(stockAccount.getAccountSID(), stock.getCurrentPrice(), stockQuantity);
 		deposit(price);
 
 	}
@@ -166,12 +166,12 @@ public class Trader {
 		System.out.println("Current Balance: $" + marketAccount.getBalance());
 	}
 
-	private static void showTransactionHistory(int stock_id) {
+	private static void showTransactionHistory(String stock_id) {
 	}
 
-	private static void showProfile(int stock_id) {
+	private static void showProfile(String stock_id) {
 		Stocks stock = Communications.getStock(stock_id);
-		System.out.println("Current Price: " + stock.getCurrentPrice());
+		System.out.println("Current Price: $" + stock.getCurrentPrice());
 		ActorDirectorProfile profile = Communications.getActorDirectorProfile(stock_id);
 		System.out.println(profile.toString());
 	}

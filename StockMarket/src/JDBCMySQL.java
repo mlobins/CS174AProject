@@ -14,6 +14,11 @@ import java.util.Scanner;
 //We have get functions now we need set functions
 //Transaction functions (buy, sell, deposit, withdraw, accrue_interest)
 //Interface and its appropriate data
+//what happens if you buy 20 shares for $10 and then 10 shares for $20?
+//set contract
+//get contract
+//create, set, get transaction table
+//rewrite sql queries for get functions
 
 
 

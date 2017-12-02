@@ -2,7 +2,7 @@
 public class MarketAccounts {
 	
 	private int account_mid;
-	private int balance;
+	private double balance;
 	private int transID;
 	private String username;
 	
@@ -14,11 +14,11 @@ public class MarketAccounts {
 		this.account_mid = account_mid;
 	}
 
-	public int getBalance() {
+	public double getBalance() {
 		return balance;
 	}
 	
-	public void setBalance(int balance) {
+	public void setBalance(double balance) {
 		this.balance = balance;
 	}
 

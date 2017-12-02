@@ -46,7 +46,7 @@ public class Communications {
 
 	public void createStockAccounts() {
 		String query = "CREATE TABLE StockAccounts " + "( account_sid INTEGER, " + "stock_id INTEGER, "
-				+ "balance DOUBLE(6,2), " + "buying_price INTEGER, " + "selling_price INTEGER, " + "transid INTEGER, "
+				+ "balance DOUBLE(6,3), " + "buying_price INTEGER, " + "selling_price INTEGER, " + "transid INTEGER, "
 				+ "username CHAR(25), " + "PRIMARY KEY (account_sid), " +
 				// "FOREIGN KEY (transid) REFERENCES TRANSACTION" +
 				"FOREIGN KEY (username) REFERENCES CustomerProfile)";
@@ -85,14 +85,14 @@ public class Communications {
 		runQuery(query);
 	}
 
-	public static void setMarketAccount(int account_mid, int balance, int transID, String username) {
+	public static void setMarketAccount(int account_mid, double balance, int transID, String username) {
 		String query = "INSERT INTO MarketAccounts (account_mid, balance, transID, username)" + "VALUES (" + account_mid
 				+ ", " + balance + ", " + transID + ", " + username + ");";
 
 		runQuery(query);
 	}
 
-	public static void setStockAccount(int account_sid, int stock_id, double balance, int buying_price,
+	public static void setStockAccount(int account_sid, String stock_id, double balance, int buying_price,
 			int selling_price, int transID, String username) {
 
 		String query = "INSERT INTO StockAccounts (account_sid, stock_id, balance, buying_price, selling_price, transID, username)"
@@ -116,6 +116,10 @@ public class Communications {
 		runQuery(query);
 	}
 
+	//set contract
+	//get contract
+	//create, set, get transaction table
+	//rewrite sql queries for get functions
 	public static CustomerProfile getCustomerProfile(String username) {
 		ResultSet rs = null;
 		Connection connection = null;
@@ -221,7 +225,7 @@ public class Communications {
 		return stock_account;
 	}
 
-	public static Stocks getStock(int stock_id) {
+	public static Stocks getStock(String stock_id) {
 		ResultSet rs = null;
 		Connection connection = null;
 		Statement statement = null;
@@ -254,13 +258,13 @@ public class Communications {
 		return stock;
 	}
 
-	public static ActorDirectorProfile getActorDirectorProfile(int username) {
+	public static ActorDirectorProfile getActorDirectorProfile(String stock_id) {
 		ResultSet rs = null;
 		Connection connection = null;
 		Statement statement = null;
 
 		ActorDirectorProfile actor_director = null;
-		String query = "SELECT * FROM ActorDirectorProfile WHERE username=" + username;
+		String query = "SELECT * FROM ActorDirectorProfile WHERE stock_id=" + stock_id;
 		try {
 			connection = JDBCMySQLConnection.getConnection();
 			statement = connection.createStatement();
@@ -271,7 +275,6 @@ public class Communications {
 				actor_director.setADName(rs.getString("ad_name"));
 				actor_director.setStockID(rs.getString("stock_id"));
 				actor_director.setDOB(rs.getInt("dob"));
-				actor_director.setContract_ID(rs.getString("contract_id"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -287,18 +290,18 @@ public class Communications {
 		return actor_director;
 	}
 
-	public static void updateMarketAccount(int account_mid, int transID, String username, int deposit)  {		//change parameters
-		String query = "UPDATE MarketAccounts"
-						+ "SET  balance = " + deposit +  "\n"
-						+ "WHERE username = '" + username + "' ;";
+	public static void updateMarketAccount(int account_mid, int transID, String username, double deposit) { // change parameters
+		String query = "UPDATE MarketAccounts" + "SET  balance = " + deposit + "\n" + "WHERE username = '" + username
+				+ "' ;";
 		runQuery(query);
-		
+
 		// add to transaction table too.
-		
+
 	}
 
-	public static void updateStockAccount(int account_mid, double balance, int transID, String username, int deposit) { // change parameters
-		String query = "UPDATE MarketAccounts" + "SET " + "WHERE ;";
+	public static void updateStockAccount(int account_sid, int selling_price, double stockQuantity) { // change parameters
+		String query = "UPDATE StockAccounts" + "SET selling_price = " + selling_price + ", balance = " + stockQuantity + "\n"
+						+ "WHERE account_sid = '" + account_sid + "' ;";
 
 		runQuery(query);
 	}

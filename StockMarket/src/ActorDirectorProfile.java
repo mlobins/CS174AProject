@@ -4,9 +4,7 @@ public class ActorDirectorProfile {
 	private String ad_name;
 	private String stock_id;
 	private int dob;
-	private String contract_id;
-	//switch to array for contracts?
-
+	
 	public String getADName() {
 		return ad_name;
 	}
@@ -31,14 +29,6 @@ public class ActorDirectorProfile {
 		this.dob = dob;
 	}
 	
-	public String getContract_ID() {
-		return contract_id;
-	}
-	
-	public void setContract_ID(String contract_id) {
-		this.contract_id = contract_id;
-	}
-	
 	//toString()
 	@Override
 	public String toString() {
@@ -58,14 +48,25 @@ public class ActorDirectorProfile {
 		return contracts;
 	}
 	
+	//store contracts in sql database
+	//how to get them and display output?
+	
 	public class Contract {
-			//add actordirector name
-			//remove contractid from actordirector
+		
+		private String ad_name;
 		private int contract_id;
 		private String movie_title;
 		private String role;
 		private int year;
 		private int total_payment;
+		
+		public String getADName() {
+			return ad_name;
+		}
+		
+		public void setADName(String ad_name) {
+			this.ad_name = ad_name;
+		}
 		
 		public int getStockID() {
 			return contract_id;
