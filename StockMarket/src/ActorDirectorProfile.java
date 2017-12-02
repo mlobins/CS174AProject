@@ -42,8 +42,20 @@ public class ActorDirectorProfile {
 	//toString()
 	@Override
 	public String toString() {
-		return "ActorDirectorProfile [ad_name=" + ad_name + ", stock_id=" + stock_id + ", closing_price="
-				+ dob + ", contract_id=" + contract_id + "]";
+		//return "ActorDirectorProfile [ad_name=" + ad_name + ", stock_id=" + stock_id + ", dob="
+				//+ dob + ", contract_id=" + contract_id + "]";
+		String hoy = "Name: " + ad_name + ", Stock_id: " + stock_id + ", DOB: "
+				+ dob;
+		hoy = hoy + "\n" + showContracts();
+		return hoy;
+	}
+	
+	public String showContracts() {
+		String contracts = "";
+		for (int i = 0; i < 10; i++) {
+			//contracts = contracts + "\n" + Contract.toString();
+		}
+		return contracts;
 	}
 	
 	public class Contract {
