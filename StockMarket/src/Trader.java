@@ -80,8 +80,8 @@ public class Trader {
 	  System.out.println("Deposit: " + deposit);
 	  
 	  MarketAccounts marketAccount = Communications.getMarketAccount(0); //must be associated with customer (one logged in as)
-	  int teset = marketAccount.getBalance() - deposit; //check for below 0 balance
-	  Communications.updateMarketAccount(teset);
+	  int change = marketAccount.getBalance() - deposit; //check for below 0 balance
+	  Communications.updateMarketAccount(marketAccount.getAccountMID(), marketAccount.getBalance(), marketAccount.getTransID(), marketAccount.getUsername(), change);
 	  
   }
   

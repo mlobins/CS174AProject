@@ -5,12 +5,12 @@ import java.sql.Statement;
 import java.util.Scanner;
 
 public class Communications {
+	static Scanner scanner = new Scanner(System.in);
 	
 	  public static void setCustomerProfile()  {		
 			Connection connection = null;
 			Statement statement = null; 
 
-			Scanner scanner = new Scanner(System.in);
 			System.out.println("Enter your username: ");
 			String username = scanner.nextLine();
 			System.out.println("Your username is " + username);
@@ -48,6 +48,121 @@ public class Communications {
 							+ email_address + ", "
 							+ taxid + ", " 
 							+ password + ");";
+		try {			
+			connection = JDBCMySQLConnection.getConnection();
+			statement = connection.createStatement();
+            statement.execute(query);
+            System.out.printf("%s\n", query);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				if (connection != null) {
+					try {
+						connection.close();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+
+	  public static void setMarketAccount(int account_mid, int balance, int transID, String username)  {		
+			Connection connection = null;
+			Statement statement = null; 
+			
+			String query = "INSERT INTO MarketAccounts (account_mid, balance, transID, username)" 
+							+ "VALUES ("
+							+ account_mid + ", "
+							+ balance + ", " 
+							+ transID + ", " 
+							+ username + ");";
+		try {			
+			connection = JDBCMySQLConnection.getConnection();
+			statement = connection.createStatement();
+            statement.execute(query);
+            System.out.printf("%s\n", query);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				if (connection != null) {
+					try {
+						connection.close();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+	
+	  public static void setStockAccount(int account_sid, int stock_id, double balance, int buying_price, int selling_price, int transID, String username)  {		
+			Connection connection = null;
+			Statement statement = null; 
+			
+			String query = "INSERT INTO StockAccounts (account_sid, stock_id, balance, buying_price, selling_price, transID, username)"
+							+ "VALUES ("
+							+ account_sid + ", "
+							+ stock_id + ", " 
+							+ balance + ", " 
+							+ buying_price + ", "
+							+ selling_price + ", "
+							+ transID + ", " 
+							+ username + ");";
+		try {			
+			connection = JDBCMySQLConnection.getConnection();
+			statement = connection.createStatement();
+            statement.execute(query);
+            System.out.printf("%s\n", query);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				if (connection != null) {
+					try {
+						connection.close();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+
+	  public static void setStocks(String stock_id, String ad_name, int closing_price, int current_price)  {		
+			Connection connection = null;
+			Statement statement = null; 
+			
+			String query = "INSERT INTO Stocks (stock_id, ad_name, closing_price, current_price)"
+							+ "VALUES ("
+							+ stock_id + ", "
+							+ ad_name + ", " 
+							+ closing_price + ", " 
+							+ current_price + ");";
+		try {			
+			connection = JDBCMySQLConnection.getConnection();
+			statement = connection.createStatement();
+            statement.execute(query);
+            System.out.printf("%s\n", query);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				if (connection != null) {
+					try {
+						connection.close();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+
+	  public static void setActorDirectorProfile(String ad_name, String stock_id, int dob, String contract_id)  {		
+			Connection connection = null;
+			Statement statement = null; 
+			
+			String query = "INSERT INTO ActorDirectorProfile (ad_name, stock_id, dob, contract_id)"
+							+ "VALUES ("
+							+ ad_name + ", "
+							+ stock_id + ", " 
+							+ dob + ", " 
+							+ contract_id + ");";
 		try {			
 			connection = JDBCMySQLConnection.getConnection();
 			statement = connection.createStatement();
@@ -237,7 +352,7 @@ public class Communications {
 			return actor_director;
 	  }
 
-	  public static void updateMarketAccount(int deposit)  {		//change parameters
+	  public static void updateMarketAccount(int account_mid, int balance, int transID, String username, int deposit)  {		//change parameters
 			Connection connection = null;
 			Statement statement = null; 
 
