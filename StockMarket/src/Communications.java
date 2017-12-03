@@ -76,9 +76,11 @@ public class Communications {
 	}
 
 	public void createTransactions() {
-		String query = "Create Table Transactions " + "( transid INTEGER, username VARCHAR(25),"
-				+ " account_sid INTEGER" + ", stock_id CHAR(3)" + ", buying_price DOUBLE(6,2)"
-				+ ", selling_price DOUBLE (6.2) " + "PRIMARY KEY (transid), "
+		String query = "Create Table Transactions "
+				+ "( transid INTEGER, username VARCHAR(25), transaction_type INTEGER," + " account_sid INTEGER"
+				+ " account_mid INTEGER" + ", stock_id CHAR(3)" + ", stockQuantity DOUBLE(6,3) "
+				+ ", buying_price DOUBLE(6,2)" + ", selling_price DOUBLE (6.2) " + ", deposit DOUBLE (6.2) "
+				+ ", withdraw DOUBLE (6.2) " + ", accrue_interest DOUBLE (6.2) " + "PRIMARY KEY (transid), "
 				+ "FOREIGN KEY(username) REFERENCES CustomerProfile, "
 				+ "FOREIGN KEY (account_sid INTEGER) REFERENCES StockAccounts" + ")";
 		runQuery(query);
@@ -134,11 +136,14 @@ public class Communications {
 		runQuery(query);
 	}
 
-	public static void setTransaction(int transID, String username, int account_sid, String stock_id,
-			double buying_price, double selling_price) {
-		String query = "INSERT INTO Contracts (transID, username, account_sid, stock_id, buying_price, selling_price)"
-				+ "VALUES (" + transID + ", " + username + ", " + account_sid + ", " + stock_id + ", " + buying_price + ", "
-				+ selling_price + ");";
+	public static void setTransaction(int transID, String username, int transaction_type, int account_sid,
+			int account_mid, String stock_id, double stock_quantity, double buying_price, double selling_price,
+			double deposit, double withdraw, double accrue_interest) {
+		String query = "INSERT INTO Transactions (transID, username, transaction_type, account_sid, account_mid,"
+				+ "stock_id, stock_quantity, buying_price, selling_price, deposit, withdraw, accrue_interest)"
+				+ "VALUES (" + transID + ", " + username + ", " + transaction_type + ", " + account_sid + ", "
+				+ account_mid + ", " + stock_id + "," + stock_quantity + ", " + buying_price + ", " + selling_price
+				+ ", " + deposit + ", " + withdraw + ", " + accrue_interest + ");";
 
 		runQuery(query);
 	}
@@ -348,7 +353,7 @@ public class Communications {
 		}
 		return contract;
 	}
-	
+
 	public static Transaction getTransaction(String username, String stock_id, String account_sid) {
 		ResultSet rs = null;
 		Connection connection = null;
@@ -365,10 +370,16 @@ public class Communications {
 				transaction = new Transaction();
 				transaction.setTransID((rs.getInt("transID")));
 				transaction.setUsername((rs.getString("username")));
+				transaction.setTransactionType((rs.getInt("transaction_type")));
 				transaction.setAccountSID(rs.getInt("account_sid"));
+				transaction.setAccountMID(rs.getInt("account_mid"));
+				transaction.setStockQuantity(rs.getDouble("stock_quantity"));
 				transaction.setStockID(rs.getString("stock_id"));
-				transaction.setBuyingPrice(rs.getInt("buying_price"));
-				transaction.setSellingPrice((rs.getInt("selling_price")));
+				transaction.setBuyingPrice(rs.getDouble("buying_price"));
+				transaction.setSellingPrice((rs.getDouble("selling_price")));
+				transaction.setDeposit(rs.getDouble("deposit"));
+				transaction.setWithdraw((rs.getDouble("withdraw")));
+				transaction.setAccrueInterest(rs.getDouble("accrue_interest"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -394,17 +405,60 @@ public class Communications {
 
 	}
 
-	public static void updateStockAccountSell(int account_sid, double selling_price, double stockQuantity) { // change
-																												// parameters
+	public static void updateStockAccountSell(int account_sid, double selling_price, double stockQuantity,
+			String username) { // change parameters
 		String query = "UPDATE StockAccounts" + "SET selling_price = " + selling_price + ", balance = " + stockQuantity
-				+ "\n" + "WHERE account_sid = '" + account_sid + "' ;";
+				+ "\n" + "WHERE account_sid = '" + account_sid + "' AND username = '" + username + "' ;";
 		runQuery(query);
 	}
 
-	public static void updateStockAccountBuy(int account_sid, double buying_price, double stockQuantity) { // change
-																											// parameters
+	public static void updateStockAccountBuy(int account_sid, double buying_price, double stockQuantity,
+			String username) {
 		String query = "UPDATE StockAccounts" + "SET buying_price = " + buying_price + ", balance = " + stockQuantity
-				+ "\n" + "WHERE account_sid = '" + account_sid + "' ;";
+				+ "\n" + "WHERE account_sid = '" + account_sid + "' AND username = '" + username + "' ;";
+		runQuery(query);
+	}
+
+	public static void updateTransactionSell(int account_sid, int transaction_type, double selling_price,
+			double stock_quantity, String username) {
+		String query = "UPDATE Transactions" + "SET selling_price = " + selling_price + ", transaction_type = "
+				+ transaction_type + ", stock_quantity = " + stock_quantity + "\n" + "WHERE account_sid = '"
+				+ account_sid + "' AND username = '" + username + "' ;";
+		runQuery(query);
+	}
+
+	public static void updateTransactionBuy(int account_sid, int transaction_type, double buying_price,
+			double stock_quantity, String username) {
+		String query = "UPDATE Transactions" + "SET buying_price = " + buying_price + ", transaction_type = "
+				+ transaction_type + ", stock_quantity = " + stock_quantity + "\n" + "WHERE account_sid = '"
+				+ account_sid + "' AND username = '" + username + "' ;";
+		runQuery(query);
+	}
+
+	public static void updateTransactionDeposit(int account_mid, int transaction_type, double deposit,
+			String username) {
+		String query = "UPDATE Transactions" + "SET deposit = " + deposit + ", transaction_type = " + transaction_type
+				+ "\n" + "WHERE account_mid = '" + account_mid + "' AND username = '" + username + "' ;";
+		runQuery(query);
+	}
+
+	public static void updateTransactionWithdraw(int account_mid, int transaction_type, double withdraw,
+			String username) {
+		String query = "UPDATE Transactions" + "SET withdraw = " + withdraw + ", transaction_type = " + transaction_type
+				+ "\n" + "WHERE account_mid = '" + account_mid + "' AND username = '" + username + "' ;";
+		runQuery(query);
+	}
+
+	/*
+	 * public static void updateTransactionAccrueInterest(int account_mid, int
+	 * transaction_type, double buying_price, String username) { String query =
+	 * "UPDATE Transactions" + "SET buying_price = " + buying_price +
+	 * ", transaction_type = " + transaction_type + "\n" + "WHERE account_mid = '" +
+	 * account_mid + "' AND username = '" + username + "' ;"; runQuery(query); }
+	 */
+	public static void updateStock(String stock_id, double current_price) {
+		String query = "UPDATE Stocks" + "SET current_price = " + current_price + "\n" + "WHERE stock_id = '" + stock_id
+				+ "' ;";
 		runQuery(query);
 	}
 

@@ -6,6 +6,11 @@ public class Trader {
 	static int account_SID = 0;
 	static int account_MID = 0;
 	static int trans_ID = 0;
+	static int buyType = 1;
+	static int sellType = 2;
+	static int depositType = 3;
+	static int withdrawType = 4;
+	static int accrue_interestType = 5;
 
 	public static void traderInit() {
 		int control = 1;
@@ -57,7 +62,7 @@ public class Trader {
 		System.out.println("Your password is " + password);
 		Communications.setCustomerProfile(username, name, state, phone_number, email_address, taxid, password);
 		Communications.setMarketAccount(account_MID, 0, trans_ID, username);
-		deposit(1000);
+		deposit(1000, false);
 		account_MID++;
 		trans_ID++;
 		scanner.close();
@@ -89,12 +94,12 @@ public class Trader {
 				System.out.println("Enter the amount you want to deposit: ");
 				double deposit = scanner.nextInt();
 				System.out.println("Deposit: " + deposit);
-				deposit(deposit);
+				deposit(deposit, false);
 			} else if (choice == 1) {
 				System.out.println("Enter the amount you want to withdraw: ");
 				double withdraw = scanner.nextInt();
 				System.out.println("Withdraw: " + withdraw);
-				withdraw(withdraw);
+				withdraw(withdraw, false);
 			} else if (choice == 2) {
 				System.out.println("What stock do you want to buy?: ");
 				String stock_id = scanner.nextLine();
@@ -126,18 +131,26 @@ public class Trader {
 		scanner.close();
 	}
 
-	private static void deposit(double deposit) {
+	private static void deposit(double deposit, boolean buySell) {
 		MarketAccounts marketAccount = Communications.getMarketAccount(customer.getUsername());
 		double change = marketAccount.getBalance() + deposit; // check for below 0 balance
 		Communications.updateMarketAccount(marketAccount.getAccountMID(), marketAccount.getTransID(),
 				marketAccount.getUsername(), change);
+		if (buySell == true) {
+			Communications.updateTransactionDeposit(marketAccount.getAccountMID(), depositType, change,
+					customer.getUsername());
+		}
 	}
 
-	private static void withdraw(double withdraw) {
+	private static void withdraw(double withdraw, boolean buySell) {
 		MarketAccounts marketAccount = Communications.getMarketAccount(customer.getUsername());
 		double change = marketAccount.getBalance() + withdraw; // check for below 0 balance
 		Communications.updateMarketAccount(marketAccount.getAccountMID(), marketAccount.getTransID(),
 				marketAccount.getUsername(), change);
+		if (buySell == true) {
+			Communications.updateTransactionWithdraw(marketAccount.getAccountMID(), withdrawType, change,
+					customer.getUsername());
+		}
 	}
 
 	private static void buy(String stock_id, double stockQuantity) {
@@ -151,20 +164,13 @@ public class Trader {
 					customer.getUsername()); // add stats
 			account_SID++;
 			trans_ID++;
-			stockAccount = Communications.getStockAccount(customer.getUsername(), stock_id, stock.getCurrentPrice()); // multiple
-																														// stock
-																														// accounts
-																														// possible,
-																														// rewrite
-																														// sql
-																														// query
-																														// to
-																														// hold
-																														// stock_id?
+			stockAccount = Communications.getStockAccount(customer.getUsername(), stock_id, stock.getCurrentPrice());
 		}
 		Communications.updateStockAccountBuy(stockAccount.getAccountSID(), stockAccount.getBuyingPrice(),
-				stockAccount.getBalance());
-		withdraw(price);
+				stockAccount.getBalance(), customer.getUsername()); // buying price?
+		Communications.updateTransactionBuy(stockAccount.getAccountSID(), buyType, stock.getCurrentPrice(),
+				stockQuantity, customer.getUsername());
+		withdraw(price, true);
 	}
 
 	private static void sell(String stock_id, double stockQuantity) {
@@ -174,8 +180,10 @@ public class Trader {
 		StockAccounts stockAccount = Communications.getStockAccount(customer.getUsername(), stock_id,
 				stock.getCurrentPrice());
 		Communications.updateStockAccountSell(stockAccount.getAccountSID(), stock.getCurrentPrice(),
-				stockAccount.getBalance());
-		deposit(price);
+				stockAccount.getBalance(), customer.getUsername());
+		Communications.updateTransactionSell(stockAccount.getAccountSID(), sellType, stock.getCurrentPrice(),
+				stockQuantity, customer.getUsername());
+		deposit(price, true);
 
 	}
 

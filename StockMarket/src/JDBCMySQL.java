@@ -18,6 +18,7 @@ import java.util.Scanner;
 //rewrite sql queries for get functions
 //debug
 //movie info
+//add time
 
 public class JDBCMySQL {
 	public static void main(String[] args) {
@@ -50,7 +51,7 @@ public class JDBCMySQL {
 			} else if (choice == 2) {
 				System.exit(0);
 			} else if (choice == 3) {
-				System.exit(0);
+				Debug.debugInit();
 			}
 		}
 		scanner.close();
