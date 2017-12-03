@@ -27,6 +27,7 @@ public class Manager {
 				control = 0;
 			}
 		}
+		scanner.close();
 	}
 
 	public static void addInterest(int username) {

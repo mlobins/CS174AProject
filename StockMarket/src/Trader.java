@@ -23,6 +23,7 @@ public class Trader {
 				control = 0;
 			}
 		}
+		scanner.close();
 	}
 
 	private static void register() {
@@ -59,6 +60,7 @@ public class Trader {
 		deposit(1000);
 		account_MID++;
 		trans_ID++;
+		scanner.close();
 	}
 
 	private static void login() {
@@ -67,6 +69,7 @@ public class Trader {
 		String username = scanner.nextLine();
 		customer = Communications.getCustomerProfile(username);
 		System.out.println("Your username is " + username);
+		scanner.close();
 		// goto trader
 		// add password functionality
 		// get customer profile
@@ -120,6 +123,7 @@ public class Trader {
 				control = 0;
 			}
 		}
+		scanner.close();
 	}
 
 	private static void deposit(double deposit) {
@@ -140,23 +144,37 @@ public class Trader {
 		Stocks stock = Communications.getStock(stock_id);
 		double price = stock.getCurrentPrice() * stockQuantity + 20;
 
-		StockAccounts stockAccount = Communications.getStockAccount(customer.getUsername(), stock_id, stock.getCurrentPrice() );
+		StockAccounts stockAccount = Communications.getStockAccount(customer.getUsername(), stock_id,
+				stock.getCurrentPrice());
 		if (stockAccount == null) {
-			Communications.setStockAccount(account_SID, stock_id, stockQuantity, stock.getCurrentPrice(), 0, trans_ID, customer.getUsername()); // add stats
+			Communications.setStockAccount(account_SID, stock_id, stockQuantity, stock.getCurrentPrice(), 0, trans_ID,
+					customer.getUsername()); // add stats
 			account_SID++;
 			trans_ID++;
-			stockAccount = Communications.getStockAccount(customer.getUsername(), stock_id, stock.getCurrentPrice() );  // multiple stock accounts possible, rewrite sql query to hold stock_id?
+			stockAccount = Communications.getStockAccount(customer.getUsername(), stock_id, stock.getCurrentPrice()); // multiple
+																														// stock
+																														// accounts
+																														// possible,
+																														// rewrite
+																														// sql
+																														// query
+																														// to
+																														// hold
+																														// stock_id?
 		}
-		Communications.updateStockAccountBuy(stockAccount.getAccountSID(), stockAccount.getBuyingPrice(), stockAccount.getBalance());
+		Communications.updateStockAccountBuy(stockAccount.getAccountSID(), stockAccount.getBuyingPrice(),
+				stockAccount.getBalance());
 		withdraw(price);
 	}
 
 	private static void sell(String stock_id, double stockQuantity) {
 		Stocks stock = Communications.getStock(stock_id);
 		double price = stock.getCurrentPrice() * stockQuantity - 20;
-		
-		StockAccounts stockAccount = Communications.getStockAccount(customer.getUsername(), stock_id, stock.getCurrentPrice() );
-		Communications.updateStockAccountSell(stockAccount.getAccountSID(), stock.getCurrentPrice(), stockAccount.getBalance());
+
+		StockAccounts stockAccount = Communications.getStockAccount(customer.getUsername(), stock_id,
+				stock.getCurrentPrice());
+		Communications.updateStockAccountSell(stockAccount.getAccountSID(), stock.getCurrentPrice(),
+				stockAccount.getBalance());
 		deposit(price);
 
 	}
