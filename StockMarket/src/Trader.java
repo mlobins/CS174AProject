@@ -147,7 +147,7 @@ public class Trader {
 			trans_ID++;
 			stockAccount = Communications.getStockAccount(customer.getUsername(), stock_id, stock.getCurrentPrice() );  // multiple stock accounts possible, rewrite sql query to hold stock_id?
 		}
-		// Communications.updateStockAccount();
+		Communications.updateStockAccountBuy(stockAccount.getAccountSID(), stockAccount.getBuyingPrice(), stockAccount.getBalance());
 		withdraw(price);
 	}
 
