@@ -18,6 +18,7 @@ import java.util.Scanner;
 //create, set, get transaction table
 //rewrite sql queries for get functions
 //debug
+//movie info
 
 
 

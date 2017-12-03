@@ -3,8 +3,8 @@ public class Stocks {
 
 	private String stock_id;
 	private String ad_name;
-	private int closing_price;
-	private int current_price;
+	private double closing_price;
+	private double current_price;
 
 	public String getStockID() {
 		return stock_id;
@@ -22,19 +22,19 @@ public class Stocks {
 		this.ad_name = ad_name;
 	}
 
-	public int getClosingPrice() {
+	public double getClosingPrice() {
 		return closing_price;
 	}
 
-	public void setClosingPrice(int closing_price) {
+	public void setClosingPrice(double closing_price) {
 		this.closing_price = closing_price;
 	}
 
-	public int getCurrentPrice() {
+	public double getCurrentPrice() {
 		return current_price;
 	}
 
-	public void setCurrentPrice(int current_price) {
+	public void setCurrentPrice(double current_price) {
 		this.current_price = current_price;
 	}
 

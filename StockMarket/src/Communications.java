@@ -75,6 +75,15 @@ public class Communications {
 		runQuery(query);
 	}
 
+	public void createTransactions() {
+		String query = "Create Table Transactions " + "( transid INTEGER, username VARCHAR(25),"
+				+ " account_sid INTEGER" + ", stock_id CHAR(3)" + ", buying_price DOUBLE(6,2)"
+				+ ", selling_price DOUBLE (6.2) " + "PRIMARY KEY (transid), "
+				+ "FOREIGN KEY(username) REFERENCES CustomerProfile, "
+				+ "FOREIGN KEY (account_sid INTEGER) REFERENCES StockAccounts" + ")";
+		runQuery(query);
+	}
+
 	public static void setCustomerProfile(String username, String name, String state, String phone_number,
 			String email_address, String taxid, String password) {
 
@@ -92,8 +101,8 @@ public class Communications {
 		runQuery(query);
 	}
 
-	public static void setStockAccount(int account_sid, String stock_id, double balance, int buying_price,
-			int selling_price, int transID, String username) {
+	public static void setStockAccount(int account_sid, String stock_id, double balance, double buying_price,
+			double selling_price, int transID, String username) {
 
 		String query = "INSERT INTO StockAccounts (account_sid, stock_id, balance, buying_price, selling_price, transID, username)"
 				+ "VALUES (" + account_sid + ", " + stock_id + ", " + balance + ", " + buying_price + ", "
@@ -125,10 +134,15 @@ public class Communications {
 		runQuery(query);
 	}
 
-	// set contract
-	// get contract
-	// create, set, get transaction table
-	// rewrite sql queries for get functions
+	public static void setTransaction(int transID, String username, int account_sid, String stock_id,
+			double buying_price, double selling_price) {
+		String query = "INSERT INTO Contracts (transID, username, account_sid, stock_id, buying_price, selling_price)"
+				+ "VALUES (" + transID + ", " + username + ", " + account_sid + ", " + stock_id + ", " + buying_price + ", "
+				+ selling_price + ");";
+
+		runQuery(query);
+	}
+
 	public static CustomerProfile getCustomerProfile(String username) {
 		ResultSet rs = null;
 		Connection connection = null;
@@ -214,7 +228,7 @@ public class Communications {
 			if (rs.next()) {
 				stock_account = new StockAccounts();
 				stock_account.setAccountSID(rs.getInt("account_sid"));
-				stock_account.setStockID(rs.getInt("stock_id"));
+				stock_account.setStockID(rs.getString("stock_id"));
 				stock_account.setBalance(rs.getInt("balance"));
 				stock_account.setBuyingPrice(rs.getInt("buying_price"));
 				stock_account.setSellingPrice((rs.getInt("selling_price")));
@@ -334,8 +348,44 @@ public class Communications {
 		}
 		return contract;
 	}
+	
+	public static Transaction getTransaction(String username, String stock_id, String account_sid) {
+		ResultSet rs = null;
+		Connection connection = null;
+		Statement statement = null;
 
-	public static void updateMarketAccount(int account_mid, int transID, String username, double deposit) { // change parameters
+		Transaction transaction = null;
+		String query = "SELECT * FROM Transactions WHERE username =" + username + " AND stock_id = " + stock_id
+				+ " AND account_sid = " + account_sid + ";";
+		try {
+			connection = JDBCMySQLConnection.getConnection();
+			statement = connection.createStatement();
+			rs = statement.executeQuery(query);
+			if (rs.next()) {
+				transaction = new Transaction();
+				transaction.setTransID((rs.getInt("transID")));
+				transaction.setUsername((rs.getString("username")));
+				transaction.setAccountSID(rs.getInt("account_sid"));
+				transaction.setStockID(rs.getString("stock_id"));
+				transaction.setBuyingPrice(rs.getInt("buying_price"));
+				transaction.setSellingPrice((rs.getInt("selling_price")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return transaction;
+	}
+
+	public static void updateMarketAccount(int account_mid, int transID, String username, double deposit) { // change
+																											// parameters
 		String query = "UPDATE MarketAccounts" + "SET  balance = " + deposit + "\n" + "WHERE username = '" + username
 				+ "' ;";
 		runQuery(query);
@@ -344,13 +394,15 @@ public class Communications {
 
 	}
 
-	public static void updateStockAccountSell(int account_sid, int selling_price, double stockQuantity) { // change parameters
+	public static void updateStockAccountSell(int account_sid, double selling_price, double stockQuantity) { // change
+																												// parameters
 		String query = "UPDATE StockAccounts" + "SET selling_price = " + selling_price + ", balance = " + stockQuantity
 				+ "\n" + "WHERE account_sid = '" + account_sid + "' ;";
 		runQuery(query);
 	}
 
-	public static void updateStockAccountBuy(int account_sid, int buying_price, double stockQuantity) { // change parameters
+	public static void updateStockAccountBuy(int account_sid, double buying_price, double stockQuantity) { // change
+																											// parameters
 		String query = "UPDATE StockAccounts" + "SET buying_price = " + buying_price + ", balance = " + stockQuantity
 				+ "\n" + "WHERE account_sid = '" + account_sid + "' ;";
 		runQuery(query);

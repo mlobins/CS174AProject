@@ -2,10 +2,10 @@
 public class StockAccounts {
 
 	private int account_sid;
-	private int stock_id;
+	private String stock_id;
 	private double balance;
-	private int buying_price;
-	private int selling_price;
+	private double buying_price;
+	private double selling_price;
 	private int transID;
 	private String username;
 
@@ -17,11 +17,11 @@ public class StockAccounts {
 		this.account_sid = account_sid;
 	}
 
-	public int getStockID() {
+	public String getStockID() {
 		return stock_id;
 	}
 
-	public void setStockID(int stock_id) {
+	public void setStockID(String stock_id) {
 		this.stock_id = stock_id;
 	}
 
@@ -33,19 +33,19 @@ public class StockAccounts {
 		this.balance = balance;
 	}
 
-	public int getBuyingPrice() {
+	public double getBuyingPrice() {
 		return buying_price;
 	}
 
-	public void setBuyingPrice(int buying_price) {
+	public void setBuyingPrice(double buying_price) {
 		this.buying_price = buying_price;
 	}
 
-	public int getSellingPrice() {
+	public double getSellingPrice() {
 		return selling_price;
 	}
 
-	public void setSellingPrice(int selling_price) {
+	public void setSellingPrice(double selling_price) {
 		this.selling_price = selling_price;
 	}
 
