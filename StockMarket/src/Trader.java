@@ -140,12 +140,12 @@ public class Trader {
 		Stocks stock = Communications.getStock(stock_id);
 		double price = stock.getCurrentPrice() * stockQuantity + 20;
 
-		StockAccounts stockAccount = Communications.getStockAccount(customer.getUsername());
+		StockAccounts stockAccount = Communications.getStockAccount(customer.getUsername(), stock_id, stock.getCurrentPrice() );
 		if (stockAccount == null) {
 			Communications.setStockAccount(account_SID, stock_id, stockQuantity, stock.getCurrentPrice(), 0, trans_ID, customer.getUsername()); // add stats
 			account_SID++;
 			trans_ID++;
-			stockAccount = Communications.getStockAccount(customer.getUsername()); // multiple stock accounts possible, rewrite sql query to hold stock_id?
+			stockAccount = Communications.getStockAccount(customer.getUsername(), stock_id, stock.getCurrentPrice() );  // multiple stock accounts possible, rewrite sql query to hold stock_id?
 		}
 		// Communications.updateStockAccount();
 		withdraw(price);
@@ -154,9 +154,9 @@ public class Trader {
 	private static void sell(String stock_id, double stockQuantity) {
 		Stocks stock = Communications.getStock(stock_id);
 		double price = stock.getCurrentPrice() * stockQuantity - 20;
-
-		StockAccounts stockAccount = Communications.getStockAccount(customer.getUsername());
-		Communications.updateStockAccount(stockAccount.getAccountSID(), stock.getCurrentPrice(), stockQuantity);
+		
+		StockAccounts stockAccount = Communications.getStockAccount(customer.getUsername(), stock_id, stock.getCurrentPrice() );
+		Communications.updateStockAccountSell(stockAccount.getAccountSID(), stock.getCurrentPrice(), stockAccount.getBalance());
 		deposit(price);
 
 	}
