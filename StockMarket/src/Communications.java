@@ -40,7 +40,8 @@ public class Communications {
 	public void createMarketAccounts() {
 
 		String query = "CREATE TABLE MarketAccounts " + "( username VARCHAR(25) NOT NULL, " + "balance DOUBLE(20, 2), "
-				+ "transid INTEGER, " + "account_mid INTEGER, " + "PRIMARY KEY (account_mid) " + ")";
+				+ "transid INTEGER, " + "account_mid INTEGER, " + "PRIMARY KEY (account_mid) "
+				+ "FOREIGN KEY (username) REFERENCES CustomerProfile)" + ")";
 		runQuery(query);
 	}
 
