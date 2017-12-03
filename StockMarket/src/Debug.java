@@ -36,6 +36,7 @@ public class Debug {
 
 	public static void closeMarket() {
 		GlobalVariables.isMarketOpen = false;
+		Communications.updateStockClosingPrice();
 	}
 
 	public static void setPrice(String stock_id, double price) {

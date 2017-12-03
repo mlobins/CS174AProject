@@ -10,15 +10,13 @@ import java.util.Scanner;
 
 //toDo
 //Get connection working (ssh tunnel or csil)
-//Transaction functions (buy, sell, deposit, withdraw, accrue_interest)
-//manager
-//trader
-//what happens if you buy 20 shares for $10 and then 10 shares for $20?
-//create, set, get transaction table
-//rewrite sql queries for get functions
-//debug
-//movie info
 //add time
+//Transaction functions (accrue_interest)
+//manager
+//trader (showtransactionhistory)
+//what happens if you buy 20 shares for $10 and then 10 shares for $20?
+//movie info
+//review sql queries
 
 public class JDBCMySQL {
 	public static void main(String[] args) {

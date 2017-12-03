@@ -71,6 +71,7 @@ public class Manager {
 
 	public static void deleteTransactions(int username) {
 		String query = "DROP TABLE Transactions;";
+		//recreate table or simply clean the table?
 		Communications.runQuery(query);
 	}
 

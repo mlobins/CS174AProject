@@ -462,5 +462,10 @@ public class Communications {
 				+ "' ;";
 		runQuery(query);
 	}
+	
+	public static void updateStockClosingPrice() {
+		String query = "UPDATE Stocks" + "SET closing_price = current_price" + "' ;";
+		runQuery(query);
+	}
 
 }
