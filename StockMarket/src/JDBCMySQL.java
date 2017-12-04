@@ -41,14 +41,22 @@ public class JDBCMySQL {
 		while (control == 1) {
 			System.out.println("Customer (0) or Manager (1)? Exit(2) Debug (3)");
 			int choice = scanner.nextInt();
-			if (choice == 0) {
+			switch (choice) {
+			case (0):
 				Trader.trader();
-			} else if (choice == 1) {
+				break;
+			case (1):
 				Manager.manager();
-			} else if (choice == 2) {
+				break;
+			case (2):
 				System.exit(0);
-			} else if (choice == 3) {
+				break;
+			case (3):
 				Debug.debugInit();
+				break;
+			default:
+				System.out.println("Invalid Choice: ");
+				break;
 			}
 		}
 		scanner.close();

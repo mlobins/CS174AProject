@@ -11,22 +11,31 @@ public class Movies {
 		while (control == 1) {
 			System.out.println("Movie Info (0)\n" + "Top Movies (1)\n" + "Reviews (2)\n" + "Exit (3)\n");
 			int choice = scanner.nextInt();
-			if (choice == 0) {
+
+			switch (choice) {
+			case (0):
 				System.out.println("Enter the id of the movie: ");
 				int id = scanner.nextInt();
 				movieInfo(id);
-			} else if (choice == 1) {
+				break;
+			case (1):
 				System.out.println("Enter lower bound of year: ");
 				int lower_year = scanner.nextInt();
 				System.out.println("Enter upper bound of year: ");
 				int upper_year = scanner.nextInt();
 				topMovieInfo(lower_year, upper_year);
-			} else if (choice == 2) {
+				break;
+			case (2):
 				System.out.println("Enter the id of the movie: ");
 				int movie_id = scanner.nextInt();
 				movieReviewInfo(movie_id);
-			} else if (choice == 3) {
+				break;
+			case (3):
 				control = 0;
+				break;
+			default:
+				System.out.println("Invalid Choice: ");
+				break;
 			}
 		}
 	}
