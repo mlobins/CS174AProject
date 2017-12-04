@@ -1,5 +1,4 @@
 
-
 public class Transaction {
 
 	private int transID;
@@ -14,7 +13,7 @@ public class Transaction {
 	private double deposit;
 	private double withdraw;
 	private double accrue_interest;
-	//add timestamp?
+	private String dateOfTransaction;
 
 	public String getUsername() {
 		return username;
@@ -41,6 +40,13 @@ public class Transaction {
 		}
 	}
 
+	public void setDateOfTransaction(String date){
+		this.dateOfTransaction = date;
+	}
+
+	public String getDateOfTransaction(){
+		return dateOfTransaction;
+	}
 	public void setTransactionType(int type) {
 		this.transaction_type = type;
 	}

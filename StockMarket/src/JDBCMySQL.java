@@ -9,7 +9,9 @@ import java.util.Scanner;
 //import com.theopentutorials.jdbc.to.Employee;
 
 //toDo
-//add time
+//create the tables in the database
+//test adding to database
+//time
 //Transaction functions (accrue_interest)
 //manager
 //trader (showtransactionhistory)
@@ -27,10 +29,10 @@ public class JDBCMySQL {
 		} finally {
 			if (connection != null) {
 				try {
-					System.out.printf("Success!");
+					System.out.printf("Connection Successful.");
 					connection.close();
 				} catch (SQLException e) {
-					System.out.printf("Exception!");
+					System.out.printf("Connection Failed.");
 					e.printStackTrace();
 				}
 			}
@@ -39,7 +41,7 @@ public class JDBCMySQL {
 		Scanner scanner = new Scanner(System.in);
 
 		while (control == 1) {
-			System.out.println("Customer (0) or Manager (1)? Exit(2) Debug (3)");
+			System.out.println("\nCustomer (0)\n" + "Manager (1)\n" + "Debug (2)\n" + "Exit (3)\n");
 			int choice = scanner.nextInt();
 			switch (choice) {
 			case (0):
@@ -49,10 +51,10 @@ public class JDBCMySQL {
 				Manager.manager();
 				break;
 			case (2):
-				System.exit(0);
+				Debug.debugInit();
 				break;
 			case (3):
-				Debug.debugInit();
+				System.exit(0);
 				break;
 			default:
 				System.out.println("Invalid Choice: ");

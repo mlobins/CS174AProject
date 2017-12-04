@@ -8,7 +8,7 @@ public class Manager {
 		Scanner scanner = new Scanner(System.in);
 
 		while (control == 1) {
-			System.out.println("Add Interest (0)\n" + "Generate Monthly Statement (1)\n"
+			System.out.println("\nAdd Interest (0)\n" + "Generate Monthly Statement (1)\n"
 					+ "Generate List of Active Customers (2)\n" + "Generate Government Drug & Tax Evasion Report (3)\n"
 					+ "Generate Customer Report (4)\n" + "Delete Transactions (5)\n" + "Exit (6)\n");
 			int choice = scanner.nextInt();

@@ -18,7 +18,7 @@ public class Trader {
 		Scanner scanner = new Scanner(System.in);
 
 		while (control == 1) {
-			System.out.println("Register (0) or Login? (1) Exit(2)");
+			System.out.println("\nRegister (0)\n" + "Login? (1)\n" + "Exit(2)\n");
 			int choice = scanner.nextInt();
 			switch (choice) {
 			case 0:
@@ -94,7 +94,7 @@ public class Trader {
 		Scanner scanner = new Scanner(System.in);
 
 		while (control == 1) {
-			System.out.println("Deposit, Withdraw, Buy, and Sell are unavailable if the market is closed.");
+			System.out.println("\nDeposit, Withdraw, Buy, and Sell are unavailable if the market is closed.");
 			System.out.println("Deposit (0)\n" + "Withdraw (1)\n" + "Buy (2)\n" + "Sell (3)\n" + "Show Balance (4)\n"
 					+ "Show Transaction History of Stock Account (5)\n" + "Show Profile (6)\n" + "Movie Info (7)\n"
 					+ "Log Out (8)\n");
@@ -175,7 +175,7 @@ public class Trader {
 		Communications.updateMarketAccount(marketAccount.getAccountMID(), marketAccount.getTransID(),
 				marketAccount.getUsername(), change);
 		if (buySell == true) {
-			Communications.updateTransactionDeposit(marketAccount.getAccountMID(), depositType, change,
+			Communications.insertTransactionDeposit(marketAccount.getAccountMID(), depositType, change,
 					customer.getUsername());
 		}
 	}
@@ -186,7 +186,7 @@ public class Trader {
 		Communications.updateMarketAccount(marketAccount.getAccountMID(), marketAccount.getTransID(),
 				marketAccount.getUsername(), change);
 		if (buySell == true) {
-			Communications.updateTransactionWithdraw(marketAccount.getAccountMID(), withdrawType, change,
+			Communications.insertTransactionWithdraw(marketAccount.getAccountMID(), withdrawType, change,
 					customer.getUsername());
 		}
 	}
@@ -206,7 +206,7 @@ public class Trader {
 		}
 		Communications.updateStockAccountBuy(stockAccount.getAccountSID(), stockAccount.getBuyingPrice(),
 				stockAccount.getBalance(), customer.getUsername()); // buying price?
-		Communications.updateTransactionBuy(stockAccount.getAccountSID(), buyType, stock.getCurrentPrice(),
+		Communications.insertTransactionBuy(stockAccount.getAccountSID(), buyType, stock.getCurrentPrice(),
 				stockQuantity, customer.getUsername());
 		withdraw(price, true);
 	}
@@ -219,7 +219,7 @@ public class Trader {
 				stock.getCurrentPrice());
 		Communications.updateStockAccountSell(stockAccount.getAccountSID(), stock.getCurrentPrice(),
 				stockAccount.getBalance(), customer.getUsername());
-		Communications.updateTransactionSell(stockAccount.getAccountSID(), sellType, stock.getCurrentPrice(),
+		Communications.insertTransactionSell(stockAccount.getAccountSID(), sellType, stock.getCurrentPrice(),
 				stockQuantity, customer.getUsername());
 		deposit(price, true);
 

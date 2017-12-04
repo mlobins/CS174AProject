@@ -9,7 +9,7 @@ public class Movies {
 		Scanner scanner = new Scanner(System.in);
 
 		while (control == 1) {
-			System.out.println("Movie Info (0)\n" + "Top Movies (1)\n" + "Reviews (2)\n" + "Exit (3)\n");
+			System.out.println("\nMovie Info (0)\n" + "Top Movies (1)\n" + "Reviews (2)\n" + "Exit (3)\n");
 			int choice = scanner.nextInt();
 
 			switch (choice) {
@@ -66,7 +66,7 @@ public class Movies {
 		List<MovieReview> movie_reviews = MovieCommunications.getMovieReview(movie_id);
 		System.out.println("----------------------------");
 		for (int i = 0; i < movie_reviews.size(); i++) {
-			System.out.println("Movie Review ID: " + movie_reviews.get(i).getMovieReviewID());
+			System.out.println("Review ID: " + movie_reviews.get(i).getMovieReviewID());
 			System.out.println("Movie ID: " + movie_reviews.get(i).getMovieID());
 			System.out.println("Author: " + movie_reviews.get(i).getAuthor());
 			System.out.println("Review: " + movie_reviews.get(i).getReview());

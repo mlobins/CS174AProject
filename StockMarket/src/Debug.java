@@ -8,7 +8,7 @@ public class Debug {
 		Scanner scanner = new Scanner(System.in);
 
 		while (control == 1) {
-			System.out.println("Open Market (0)\n" + "Close Market (1)\n" + "Set Price (2)\n" + "Exit (3)");
+			System.out.println("\nOpen Market (0)\n" + "Close Market (1)\n" + "Set Price (2)\n" + "Exit (3)\n");
 			int choice = scanner.nextInt();
 			switch (choice) {
 			case 0:
@@ -37,12 +37,14 @@ public class Debug {
 
 	public static void openMarket() {
 		Globals.isMarketOpen = true;
+		System.out.println("Market is open.");
 		// start day
 	}
 
 	public static void closeMarket() {
 		Globals.isMarketOpen = false;
 		Communications.updateStockClosingPrice();
+		System.out.println("Market is closed.");
 		// finish day
 	}
 
