@@ -9,14 +9,13 @@ import java.util.Scanner;
 //import com.theopentutorials.jdbc.to.Employee;
 
 //toDo
-//Get connection working (ssh tunnel or csil)
 //add time
 //Transaction functions (accrue_interest)
 //manager
 //trader (showtransactionhistory)
 //what happens if you buy 20 shares for $10 and then 10 shares for $20?
-//movie info
 //review sql queries
+//recover from exceptions
 
 public class JDBCMySQL {
 	public static void main(String[] args) {
@@ -43,7 +42,7 @@ public class JDBCMySQL {
 			System.out.println("Customer (0) or Manager (1)? Exit(2) Debug (3)");
 			int choice = scanner.nextInt();
 			if (choice == 0) {
-				Trader.traderInit();
+				Trader.trader();
 			} else if (choice == 1) {
 				Manager.manager();
 			} else if (choice == 2) {

@@ -1,3 +1,4 @@
+
 import java.util.Scanner;
 
 public class Trader {
@@ -81,14 +82,14 @@ public class Trader {
 
 	}
 
-	private static void trader() {
+	public static void trader() {
 		int control = 1;
 		Scanner scanner = new Scanner(System.in);
 
 		while (control == 1) {
 			System.out.println("Deposit (0)\n" + "Withdraw (1)\n" + "Buy (2)\n" + "Sell (3)\n" + "Show Balance (4)\n"
-					+ "Show Transaction History of stock account (5)\n" + "Show Profile (6)\n"
-					+ "Delete Transactions (7)\n" + "Log Out (8)\n");
+					+ "Show Transaction History of Stock Account (5)\n" + "Show Profile (6)\n"
+					+ "Movie Info (7)\n" + "Log Out (8)\n");
 			int choice = scanner.nextInt();
 			if (choice == 0) {
 				System.out.println("Enter the amount you want to deposit: ");
@@ -123,7 +124,7 @@ public class Trader {
 				String stock_id = scanner.nextLine();
 				showProfile(stock_id);
 			} else if (choice == 7) {
-				movieInfo(0);
+				movieInfo();
 			} else if (choice == 8) {
 				control = 0;
 			}
@@ -202,9 +203,7 @@ public class Trader {
 		System.out.println(profile.toString());
 	}
 
-	private static void movieInfo(int username) {
-		System.out.println("HOY");
-		// topmovies?
-		// reviews?
+	private static void movieInfo() {
+		Movies.movieInit();
 	}
 }

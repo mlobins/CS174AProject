@@ -1,3 +1,4 @@
+
 import java.util.Scanner;
 
 public class Debug {
@@ -32,11 +33,13 @@ public class Debug {
 
 	public static void openMarket() {
 		GlobalVariables.isMarketOpen = true;
+		//start day
 	}
 
 	public static void closeMarket() {
 		GlobalVariables.isMarketOpen = false;
 		Communications.updateStockClosingPrice();
+		//finish day
 	}
 
 	public static void setPrice(String stock_id, double price) {

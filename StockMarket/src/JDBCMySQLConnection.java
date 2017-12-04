@@ -12,11 +12,13 @@ public class JDBCMySQLConnection {
 	public static final String USER = "mlobins";
 	public static final String PASSWORD = "442";
 	public static final String DRIVER_CLASS = "com.mysql.jdbc.Driver"; 
+
+	private static JDBCMySQLConnection instanceMOV = new JDBCMySQLConnection();
+	public static final String URLMOV = "jdbc:mysql://cs174a.engr.ucsb.edu:3306/moviesDB";
 	
 	//private constructor
 	private JDBCMySQLConnection() {
 		try {
-			//Step 2: Load MySQL Java driver
 			Class.forName(DRIVER_CLASS);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -27,7 +29,6 @@ public class JDBCMySQLConnection {
 
 		Connection connection = null;
 		try {
-			//Step 3: Establish Java MySQL connection
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 		} catch (SQLException e) {
 			System.out.println("ERROR: Unable to Connect to Database.");
@@ -37,6 +38,21 @@ public class JDBCMySQLConnection {
 	
 	public static Connection getConnection() {
 		return instance.createConnection();
+	}
+	
+	private Connection createConnectionMOV() {
+
+		Connection connection = null;
+		try {
+			connection = DriverManager.getConnection(URLMOV, USER, PASSWORD);
+		} catch (SQLException e) {
+			System.out.println("ERROR: Unable to Connect to Database.");
+		}
+		return connection;
+	}	
+	
+	public static Connection getConnectionMOV() {
+		return instanceMOV.createConnectionMOV();
 	}
 	
 	

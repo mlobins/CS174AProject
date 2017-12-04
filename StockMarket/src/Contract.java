@@ -1,4 +1,5 @@
 
+
 	public class Contract {
 		
 		private String ad_name;

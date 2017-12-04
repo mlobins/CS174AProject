@@ -1,4 +1,5 @@
 
+
 public class Stocks {
 
 	private String stock_id;

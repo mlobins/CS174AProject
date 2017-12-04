@@ -1,3 +1,4 @@
+
 public class CustomerProfile {
 	
 	private String name;

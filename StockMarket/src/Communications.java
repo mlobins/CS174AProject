@@ -396,8 +396,7 @@ public class Communications {
 		return transaction;
 	}
 
-	public static void updateMarketAccount(int account_mid, int transID, String username, double deposit) { // change
-																											// parameters
+	public static void updateMarketAccount(int account_mid, int transID, String username, double deposit) {
 		String query = "UPDATE MarketAccounts" + "SET  balance = " + deposit + "\n" + "WHERE username = '" + username
 				+ "' ;";
 		runQuery(query);
@@ -464,7 +463,7 @@ public class Communications {
 	}
 	
 	public static void updateStockClosingPrice() {
-		String query = "UPDATE Stocks" + "SET closing_price = current_price" + "' ;";
+		String query = "UPDATE Stocks" + "SET closing_price = current_price" + " ;";
 		runQuery(query);
 	}
 
