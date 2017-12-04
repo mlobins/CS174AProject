@@ -8,46 +8,46 @@ public class Debug {
 		Scanner scanner = new Scanner(System.in);
 
 		while (control == 1) {
-			System.out.println("Open Market (0)\n" + "Close Market (1)\n" + "Set Price (2)\n" + "Set New Date (3)\n" + "Exit (4)");
+			System.out.println("Open Market (0)\n" + "Close Market (1)\n" + "Set Price (2)\n" + "Exit (3)");
 			int choice = scanner.nextInt();
-			if (choice == 0) {
+			switch (choice) {
+			case 0:
 				openMarket();
-			} else if (choice == 1) {
+				break;
+			case 1:
 				closeMarket();
-			} else if (choice == 2) {
+				break;
+			case 2:
 				System.out.println("What stock do you want to change?: ");
 				String stock_id = scanner.nextLine();
 				System.out.println("Enter the new price of the stock: ");
 				double price = scanner.nextDouble();
 				setPrice(stock_id, price);
-			} else if (choice == 3) {
-				System.out.println("Choose the new date: ");
-				double date = scanner.nextDouble();
-				setNewDate(date);
-			} else if (choice == 3) {
+				break;
+			case 3:
+				openMarket();
 				control = 0;
+				break;
+			default:
+				System.out.println("Invalid Choice: ");
+				break;
 			}
 		}
-		scanner.close();
 	}
 
 	public static void openMarket() {
-		GlobalVariables.isMarketOpen = true;
-		//start day
+		Globals.isMarketOpen = true;
+		// start day
 	}
 
 	public static void closeMarket() {
-		GlobalVariables.isMarketOpen = false;
+		Globals.isMarketOpen = false;
 		Communications.updateStockClosingPrice();
-		//finish day
+		// finish day
 	}
 
 	public static void setPrice(String stock_id, double price) {
 		Communications.updateStock(stock_id, price);
-	}
-
-	public static void setNewDate(double date) {
-		GlobalVariables.date = date;
 	}
 
 }

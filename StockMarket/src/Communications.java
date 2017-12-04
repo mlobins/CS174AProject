@@ -87,6 +87,16 @@ public class Communications {
 		runQuery(query);
 	}
 
+	public void createDate(){
+		String query = "Create  TABLE Date"
+				+ "( todaysDate DATE ) ;" ;
+	}
+
+	public static void setDate(String todaysDate){
+		String query = "INSERT INTO Date (todaysDate)"
+				+ "VALUES (" + todaysDate + " );";
+	}
+
 	public static void setCustomerProfile(String username, String name, String state, String phone_number,
 			String email_address, String taxid, String password) {
 
@@ -396,7 +406,8 @@ public class Communications {
 		return transaction;
 	}
 
-	public static void updateMarketAccount(int account_mid, int transID, String username, double deposit) {
+	public static void updateMarketAccount(int account_mid, int transID, String username, double deposit) { // change
+																											// parameters
 		String query = "UPDATE MarketAccounts" + "SET  balance = " + deposit + "\n" + "WHERE username = '" + username
 				+ "' ;";
 		runQuery(query);

@@ -29,7 +29,6 @@ public class Movies {
 				control = 0;
 			}
 		}
-		scanner.close();
 	}
 
 	private static void movieInfo(int id) {

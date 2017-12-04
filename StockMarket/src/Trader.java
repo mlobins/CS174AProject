@@ -87,32 +87,49 @@ public class Trader {
 		Scanner scanner = new Scanner(System.in);
 
 		while (control == 1) {
+			System.out.println("Deposit, Withdraw, Buy, and Sell are unavailable if the market is closed.");
 			System.out.println("Deposit (0)\n" + "Withdraw (1)\n" + "Buy (2)\n" + "Sell (3)\n" + "Show Balance (4)\n"
-					+ "Show Transaction History of Stock Account (5)\n" + "Show Profile (6)\n"
-					+ "Movie Info (7)\n" + "Log Out (8)\n");
+					+ "Show Transaction History of Stock Account (5)\n" + "Show Profile (6)\n" + "Movie Info (7)\n"
+					+ "Log Out (8)\n");
 			int choice = scanner.nextInt();
 			if (choice == 0) {
-				System.out.println("Enter the amount you want to deposit: ");
-				double deposit = scanner.nextInt();
-				System.out.println("Deposit: " + deposit);
-				deposit(deposit, false);
+				if (Globals.isMarketOpen() == true) {
+					System.out.println("Enter the amount you want to deposit: ");
+					double deposit = scanner.nextInt();
+					System.out.println("Deposit: " + deposit);
+					deposit(deposit, false);
+				} else {
+					System.out.println("Market is not open.");
+				}
 			} else if (choice == 1) {
-				System.out.println("Enter the amount you want to withdraw: ");
-				double withdraw = scanner.nextInt();
-				System.out.println("Withdraw: " + withdraw);
-				withdraw(withdraw, false);
+				if (Globals.isMarketOpen() == true) {
+					System.out.println("Enter the amount you want to withdraw: ");
+					double withdraw = scanner.nextInt();
+					System.out.println("Withdraw: " + withdraw);
+					withdraw(withdraw, false);
+				} else {
+					System.out.println("Market is not open.");
+				}
 			} else if (choice == 2) {
-				System.out.println("What stock do you want to buy?: ");
-				String stock_id = scanner.nextLine();
-				System.out.println("How many stocks do you want to buy?: ");
-				double stockQuantity = scanner.nextInt();
-				buy(stock_id, stockQuantity);
+				if (Globals.isMarketOpen() == true) {
+					System.out.println("What stock do you want to buy?: ");
+					String stock_id = scanner.nextLine();
+					System.out.println("How many stocks do you want to buy?: ");
+					double stockQuantity = scanner.nextInt();
+					buy(stock_id, stockQuantity);
+				} else {
+					System.out.println("Market is not open.");
+				}
 			} else if (choice == 3) {
-				System.out.println("What stock do you want to sell?: ");
-				String stock_id = scanner.nextLine();
-				System.out.println("How many stocks do you want to sell?: ");
-				double stockQuantity = scanner.nextInt();
-				sell(stock_id, stockQuantity);
+				if (Globals.isMarketOpen() == true) {
+					System.out.println("What stock do you want to sell?: ");
+					String stock_id = scanner.nextLine();
+					System.out.println("How many stocks do you want to sell?: ");
+					double stockQuantity = scanner.nextInt();
+					sell(stock_id, stockQuantity);
+				} else {
+					System.out.println("Market is not open.");
+				}
 			} else if (choice == 4) {
 				showBalance();
 			} else if (choice == 5) {
@@ -127,9 +144,9 @@ public class Trader {
 				movieInfo();
 			} else if (choice == 8) {
 				control = 0;
+				customer = null;
 			}
 		}
-		scanner.close();
 	}
 
 	private static void deposit(double deposit, boolean buySell) {
