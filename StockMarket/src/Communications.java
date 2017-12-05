@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
 
+//decide when to nextday() , close or open market?
+//when open have to update global variable date to current date in database
 public class Communications {
 	static Scanner scanner = new Scanner(System.in);
 
@@ -28,74 +30,130 @@ public class Communications {
 		}
 	}
 
-	public void createCustomerProfile() {
-		String query = "CREATE TABLE CustomerProfile " + "( username VARCHAR(25) NOT NULL, "
-				+ "name VARCHAR(25) NOT NULL, " + "state VACHAR(2) NOT NULL, " + "phone_number VARCHAR(10) NOT NULL, "
+	public static void createCustomerProfile() {
+		String query = "CREATE TABLE CustomerProfile " + "( username VARCHAR(25) NOT NULL PRIMARY KEY, "
+				+ "name VARCHAR(25), " + "state VARCHAR(2) NOT NULL, " + "phone_number VARCHAR(10) NOT NULL, "
 				+ "email_address VARCHAR(25) NOT NULL, " + "taxid VARCHAR(25) NOT NULL, "
-				+ "password VARCHAR(25) NOT NULL, " + "PRIMARY KEY (username) " + ")";
+				+ "password VARCHAR(25) NOT NULL " + ") ;";
+		System.out.printf("%s", query);
 
 		runQuery(query);
 	}
 
-	public void createMarketAccounts() {
+	public static void createMarketAccounts() {
 
 		String query = "CREATE TABLE MarketAccounts " + "( username VARCHAR(25) NOT NULL, " + "balance DOUBLE(20, 2), "
 				+ "transid INTEGER, " + "account_mid INTEGER, " + "PRIMARY KEY (account_mid) "
-				+ "FOREIGN KEY (username) REFERENCES CustomerProfile)" + ")";
+				+ ", FOREIGN KEY (username) REFERENCES CustomerProfile (username)" + ");";
+		System.out.printf("%s%n", query);
+
 		runQuery(query);
 	}
 
-	public void createStockAccounts() {
+	public static void createStockAccounts() {
 		String query = "CREATE TABLE StockAccounts " + "( account_sid INTEGER, " + "stock_id CHAR(3), "
 				+ "balance DOUBLE(6,3), " + "buying_price INTEGER, " + "selling_price INTEGER, " + "transid INTEGER, "
-				+ "username CHAR(25), " + "PRIMARY KEY (account_sid), " +
+				+ "username VARCHAR(25), " + "PRIMARY KEY (account_sid), " +
 				// "FOREIGN KEY (transid) REFERENCES TRANSACTION" +
-				"FOREIGN KEY (username) REFERENCES CustomerProfile)";
+				// "FOREIGN KEY (stock_id) REFERENCES Stocks (stock_id)"
+				"FOREIGN KEY (username) REFERENCES CustomerProfile (username)) ;";
+		System.out.printf("%s", query);
+
 		runQuery(query);
 	}
 
-	public void createStocks() {
+	public static void createStocks() {
 		String query = "CREATE TABLE Stocks " + "( stock_id CHAR(3), " + "ad_name CHAR(25), "
-				+ "closing_price DOUBLE(6,2), " + "current_price DOUBLE(6,2), " + "PRIMARY KEY(stock_id), "
-				+ "FOREIGN KEY(ad_name) REFERENCES ActorDirectorProfile )";
+				+ "closing_price DOUBLE(6,2), " + "current_price DOUBLE(6,2), " + "PRIMARY KEY(stock_id) " + // "FOREIGN
+																												// KEY(ad_name)
+																												// "
+																												// +
+																												// //REFERENCES
+																												// ActorDirectorProfile
+																												// (ad_name)
+				");";
+		System.out.printf("%s", query);
+
 		runQuery(query);
 	}
 
-	public void createActorDirectorProfile() {
+	public static void createActorDirectorProfile() {
 
 		String query = "CREATE TABLE ActorDirectorProfile " + "( ad_name CHAR(25), " + "stock_id CHAR(3), "
-				+ "dob INTEGER, " + "contract_id CHAR(25), " + "PRIMARY KEY(ad_name), "
-				+ "FOREIGN KEY(stock_id) REFERENCES Stocks )";
+				+ "dob INTEGER, " + "PRIMARY KEY(ad_name), " + "FOREIGN KEY(stock_id) REFERENCES Stocks (stock_id));";
+		System.out.printf("%s", query);
+
 		runQuery(query);
 
 	}
 
-	public void createContract() {
+	public static void createContract() {
 		String query = "CREATE TABLE Contract" + "( contract_id INTEGER, " + "movie_title CHAR(255), "
-				+ "role CHAR(255), " + "year INTEGER, " + "total_payment DOUBLE(6,3), " + "PRIMARY KEY(contract_id) ) ";
+				+ "ad_name CHAR(25) , " + "role CHAR(255), " + "year INTEGER, " + "total_payment DOUBLE(6,3), "
+				+ "PRIMARY KEY(contract_id)," + " FOREIGN KEY (ad_name) REFERENCES ActorDirectorProfile (ad_name)"
+				+ ");";
 		runQuery(query);
 	}
 
-	public void createTransactions() {
+	public static void createTransactions() {
 		String query = "Create Table Transactions "
-				+ "( transid INTEGER, username VARCHAR(25), transaction_type INTEGER," + " account_sid INTEGER"
-				+ " account_mid INTEGER" + ", stock_id CHAR(3)" + ", stockQuantity DOUBLE(6,3) "
-				+ ", buying_price DOUBLE(6,2)" + ", selling_price DOUBLE (6.2) " + ", deposit DOUBLE (6.2) "
-				+ ", withdraw DOUBLE (6.2) " + ", accrue_interest DOUBLE (6.2) " + "PRIMARY KEY (transid), "
-                + ", dateOfTransaction DATE"
-				+ "FOREIGN KEY(username) REFERENCES CustomerProfile, "
-				+ "FOREIGN KEY (account_sid INTEGER) REFERENCES StockAccounts" + ")";
+				+ "( transid INTEGER, username VARCHAR(25), transaction_type INTEGER, account_sid INTEGER, "
+				+ "account_mid INTEGER, " + "stock_id CHAR(3), " + "stock_quantity DOUBLE(6,3), "
+				+ "buying_price DOUBLE(6,2), " + "selling_price DOUBLE (6,2), " + "deposit DOUBLE (6,2), "
+				+ "withdraw DOUBLE (6,2), " + "accrue_interest DOUBLE (6,2), " + "dateOfTransaction DATE, "
+				+ "PRIMARY KEY (transid) " + //"FOREIGN KEY(username) REFERENCES CustomerProfile (username), "
+				//+ "FOREIGN KEY (account_sid) REFERENCES StockAccounts (accounts_sid)" + 
+				");";
+		System.out.printf("%s", query);
+
 		runQuery(query);
 	}
 
-	public void createDate(){
-		String query = "Create  TABLE Date"
-				+ "( todaysDate DATE ) ;" ;
+	public static void createDate() {
+		String query = "Create  TABLE Date" + "( todaysDate DATE ) ;";
+		runQuery(query);
 	}
 
-	public static void setDate(String todaysDate){
-		String query = "INSERT INTO Date (todaysDate)"
-				+ "VALUES (" + todaysDate + " );";
+	public static void setDate(String todaysDate) {
+		String query = "INSERT INTO Date (todaysDate)" + "VALUES (" + todaysDate + " );";
+		runQuery(query);
+	}
+
+	public static String getDateString() {
+		String date = null;
+		ResultSet rs = null;
+		Connection connection = null;
+		Statement statement = null;
+		//String query = "SELECT EXTRACT(YEAR_MONTH FROM Date);";
+		String query = "SELECT * FROM Date";
+		// "SELECT CONVERT(varchar(10), todaysDate, 120) FROM Date;";
+		try {
+			connection = JDBCMySQLConnection.getConnection();
+			statement = connection.createStatement();
+			rs = statement.executeQuery(query);
+
+			if (rs.next()) {
+				date = rs.getString("todaysDate");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return date;
+
+	}
+
+	public static void nextDay() {
+		String query = "UPDATE Date SET todaysDate = DATE_ADD( todaysDate, INTERVAL 1 DAY) ;";
+		runQuery(query);
+
 	}
 
 	public static void setCustomerProfile(String username, String name, String state, String phone_number,
@@ -155,7 +213,7 @@ public class Communications {
 				+ "stock_id, stock_quantity, buying_price, selling_price, deposit, withdraw, accrue_interest, dateOfTransaction)"
 				+ "VALUES (" + transID + ", " + username + ", " + transaction_type + ", " + account_sid + ", "
 				+ account_mid + ", " + stock_id + "," + stock_quantity + ", " + buying_price + ", " + selling_price
-				+ ", " + deposit + ", " + withdraw + ", " + accrue_interest  + ", " + date + ");";
+				+ ", " + deposit + ", " + withdraw + ", " + accrue_interest + ", " + date + ");";
 
 		runQuery(query);
 	}
@@ -392,7 +450,7 @@ public class Communications {
 				transaction.setDeposit(rs.getDouble("deposit"));
 				transaction.setWithdraw((rs.getDouble("withdraw")));
 				transaction.setAccrueInterest(rs.getDouble("accrue_interest"));
-				transaction.setDateOfTransaction(rs.getString( "dateOfTransaction"));
+				transaction.setDateOfTransaction(rs.getString("dateOfTransaction"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -424,37 +482,43 @@ public class Communications {
 	public static void updateStockAccountBuy(int account_sid, double buying_price, double stockQuantity,
 			String username) {
 		String query = "UPDATE StockAccounts" + "SET buying_price = " + buying_price + ", balance = " + stockQuantity
-			+ "\n" + "WHERE account_sid = '" + account_sid + "' AND username = '" + username + "' ;";
+				+ "\n" + "WHERE account_sid = '" + account_sid + "' AND username = '" + username + "' ;";
 		runQuery(query);
 	}
 
 	public static void insertTransactionSell(int account_sid, int transaction_type, double selling_price,
 			double stock_quantity, String username) {
-		String query = "INSERT INTO  Transactions( " + "selling_price, transaction_type,  stock_quantity, account_sid ,username, dateOfTransaction )"
-                + " VALUES (" + selling_price + ", " + transaction_type + ", " + stock_quantity + ", " + account_sid + ", " + username +  ", " + Globals.todaysDate + " );";
+		String query = "INSERT INTO  Transactions( "
+				+ "selling_price, transaction_type,  stock_quantity, account_sid ,username, dateOfTransaction )"
+				+ " VALUES (" + selling_price + ", " + transaction_type + ", " + stock_quantity + ", " + account_sid
+				+ ", " + username + ", " + Globals.todaysDate + " );";
 		runQuery(query);
 	}
 
 	public static void insertTransactionBuy(int account_sid, int transaction_type, double buying_price,
 			double stock_quantity, String username) {
-        String query = "INSERT INTO  Transactions( " + "buying_price, transaction_type,  stock_quantity, account_sid ,username, dateOfTransaction )"
-                + " VALUES (" + buying_price + ", " + transaction_type + ", " + stock_quantity + ", " + account_sid + ", " + username + ", " + Globals.todaysDate+ " );"
-				+ account_sid + "' AND username = '" + username + "' ;";
+		String query = "INSERT INTO  Transactions( "
+				+ "buying_price, transaction_type,  stock_quantity, account_sid ,username, dateOfTransaction )"
+				+ " VALUES (" + buying_price + ", " + transaction_type + ", " + stock_quantity + ", " + account_sid
+				+ ", " + username + ", " + Globals.todaysDate + " );" + account_sid + "' AND username = '" + username
+				+ "' ;";
 		runQuery(query);
 	}
 
 	public static void insertTransactionDeposit(int account_mid, int transaction_type, double deposit,
 			String username) {
 
-		String query = "INSERT INTO Transactions (" + "deposit, transaction_type, account_mid,  username, dateOfTransaction ) " +
-                " VALUES (" + deposit + ", " + transaction_type  + ", " + account_mid + ", " + username + ", " + Globals.todaysDate + "' ;";
+		String query = "INSERT INTO Transactions ("
+				+ "deposit, transaction_type, account_mid,  username, dateOfTransaction ) " + " VALUES (" + deposit
+				+ ", " + transaction_type + ", " + account_mid + ", " + username + ", " + Globals.todaysDate + "' ;";
 		runQuery(query);
 	}
 
 	public static void insertTransactionWithdraw(int account_mid, int transaction_type, double withdraw,
 			String username) {
-        String query = "INSERT INTO Transactions (" + "withdraw, transaction_type, account_mid,  username, dateOfTransaction ) " +
-                " VALUES (" + withdraw + ", " + transaction_type  + ", " + account_mid + ", " + username + ", " + Globals.todaysDate + "' ;";
+		String query = "INSERT INTO Transactions ("
+				+ "withdraw, transaction_type, account_mid,  username, dateOfTransaction ) " + " VALUES (" + withdraw
+				+ ", " + transaction_type + ", " + account_mid + ", " + username + ", " + Globals.todaysDate + "' ;";
 		runQuery(query);
 	}
 
@@ -462,15 +526,16 @@ public class Communications {
 	 * public static void updateTransactionAccrueInterest(int account_mid, int
 	 * transaction_type, double buying_price, String username) { String query =
 	 * "UPDATE Transactions" + "SET buying_price = " + buying_price +
-	 * ", transaction_type = " + transaction_type + "\n" + "WHERE account_mid = '" +
-	 * account_mid + "' AND username = '" + username + "' ;"; runQuery(query); }
+	 * ", transaction_type = " + transaction_type + "\n" +
+	 * "WHERE account_mid = '" + account_mid + "' AND username = '" + username +
+	 * "' ;"; runQuery(query); }
 	 */
 	public static void updateStock(String stock_id, double current_price) {
 		String query = "UPDATE Stocks" + "SET current_price = " + current_price + "\n" + "WHERE stock_id = '" + stock_id
 				+ "' ;";
 		runQuery(query);
 	}
-	
+
 	public static void updateStockClosingPrice() {
 		String query = "UPDATE Stocks" + "SET closing_price = current_price" + " ;";
 		runQuery(query);

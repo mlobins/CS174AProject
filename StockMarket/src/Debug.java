@@ -1,4 +1,5 @@
 
+import java.text.ParseException;
 import java.util.Scanner;
 
 public class Debug {
@@ -8,7 +9,7 @@ public class Debug {
 		Scanner scanner = new Scanner(System.in);
 
 		while (control == 1) {
-			System.out.println("\nOpen Market (0)\n" + "Close Market (1)\n" + "Set Price (2)\n" + "Exit (3)\n");
+			System.out.println("\nOpen Market (0)\n" + "Close Market (1)\n" + "Set Price (2)\n" + "Exit (3)\n" + "Initiate Tables (4)\n");
 			int choice = scanner.nextInt();
 			switch (choice) {
 			case 0:
@@ -28,16 +29,33 @@ public class Debug {
 				openMarket();
 				control = 0;
 				break;
+			case 4:
+				initTables();
 			default:
 				System.out.println("Invalid Choice: ");
 				break;
 			}
 		}
 	}
-
+//YYYY/MM/dd
 	public static void openMarket() {
+		
+		
+		try {
+			Globals.initializeDate();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		//Communications.createDate(); // need to move to all creates location
 		Globals.isMarketOpen = true;
 		System.out.println("Market is open.");
+		String updatedDate = Communications.getDateString();
+		System.out.printf("%s%n", updatedDate);
+		Globals.setTodaysDate(updatedDate);
+		System.out.printf("updated date = %s", updatedDate);
 		// start day
 	}
 
@@ -45,11 +63,35 @@ public class Debug {
 		Globals.isMarketOpen = false;
 		Communications.updateStockClosingPrice();
 		System.out.println("Market is closed.");
+		Communications.nextDay();
 		// finish day
+		
+		
 	}
 
 	public static void setPrice(String stock_id, double price) {
 		Communications.updateStock(stock_id, price);
+	}
+	
+	public static void initTables(){
+
+		//Communications.createStocks();
+		//Communications.createTransactions();
+			//	Communications.createActorDirectorProfile();
+
+				
+		
+		
+		//Communications.createCustomerProfile();
+
+				//Communications.createMarketAccounts();	
+
+				//Communications.createStockAccounts();
+
+				//Communications.createDate(); already created
+
+
+				//Communications.createContract();
 	}
 
 }
