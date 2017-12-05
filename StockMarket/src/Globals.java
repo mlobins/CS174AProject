@@ -52,6 +52,8 @@ public class Globals {
 		setYear(Integer.parseInt(yearMonthDay[0]));
 		setMonth(Integer.parseInt(yearMonthDay[1]));
 		setDay(Integer.parseInt(yearMonthDay[2]));
+		
+		//System.out.printf("year = %d %n month =  %d %n  day = %d %n" ,getYear(), getMonth(), getDay());
 
 	}
 }

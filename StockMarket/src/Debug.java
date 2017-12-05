@@ -20,8 +20,10 @@ public class Debug {
 				break;
 			case 2:
 				System.out.println("What stock do you want to change?: ");
-				String stock_id = scanner.nextLine();
-				System.out.println("Enter the new price of the stock: ");
+				String stock_id = scanner.next();
+				System.out.printf("stock_id= %s%n", stock_id);
+				scanner.nextLine();
+				System.out.println("Enter the new price of the stock:  ");
 				double price = scanner.nextDouble();
 				setPrice(stock_id, price);
 				break;
@@ -40,20 +42,21 @@ public class Debug {
 //YYYY/MM/dd
 	public static void openMarket() {
 		
-		
+		//Initializes date if not done so, uncomment!
+		/*
 		try {
 			Globals.initializeDate();
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		*/
 		
 		
-		//Communications.createDate(); // need to move to all creates location
 		Globals.isMarketOpen = true;
 		System.out.println("Market is open.");
 		String updatedDate = Communications.getDateString();
-		System.out.printf("%s%n", updatedDate);
+		//System.out.printf("%s%n", updatedDate);
 		Globals.setTodaysDate(updatedDate);
 		System.out.printf("updated date = %s", updatedDate);
 		// start day

@@ -3,9 +3,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
+//Changes::
 
-//decide when to nextday() , close or open market?
-//when open have to update global variable date to current date in database
+// Communication.updateClosingPrice()
+//Globals.setTodaysDate(String Date)
+//Debug.openMarket()
+//Communications.updateStock()
 public class Communications {
 	static Scanner scanner = new Scanner(System.in);
 
@@ -531,13 +534,18 @@ public class Communications {
 	 * "' ;"; runQuery(query); }
 	 */
 	public static void updateStock(String stock_id, double current_price) {
-		String query = "UPDATE Stocks" + "SET current_price = " + current_price + "\n" + "WHERE stock_id = '" + stock_id
+		String query = "UPDATE Stocks" + " SET current_price = " + current_price + " WHERE stock_id = '" + stock_id
 				+ "' ;";
 		runQuery(query);
 	}
+	
+	
 
 	public static void updateStockClosingPrice() {
-		String query = "UPDATE Stocks" + "SET closing_price = current_price" + " ;";
+		String query = "UPDATE Stocks" + " SET closing_price = current_price" + " ;";
+		
+		//System.out.printf("%s%n", query);
+
 		runQuery(query);
 	}
 
