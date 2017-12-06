@@ -147,8 +147,12 @@ public class Manager {
 		//String query = "SELECT * " + "FROM CustomerProfile c, Transactions t "
 			//+ "WHERE  t.username = c.username " + "HAVING SUM(t.stock_quantity) >= 1000;";
 		//String query = "SELECT * " + "FROM CustomerProfile c, Transactions t " + "WHERE  SUM(t.stock_quantity) >= 1000 " + "AND t.username = c.username; ";
-		String query = "SELECT SUM(t.stock_quantity) >= 1000, c.username FROM CustomerProfile c, Transactions t WHERE t.username = c.username; ";
-		
+		//String query = "SELECT SUM(t.stock_quantity) >= 1000, c.username FROM CustomerProfile c, Transactions t WHERE t.username = c.username; ";
+		String query = "SELECT c.username, c.name,  SUM(t.stock_quantity) AS total_amount" +
+					" FROM CustomerProfile c INNER JOIN Transactions t " +
+					" ON c.username = t.username " +
+					" GROUP BY c.username, c.name " +
+					" HAVING SUM(t.stock_quantity) >= 1000; "; 
 		try {
 			connection = JDBCMySQLConnection.getConnection();
 			statement = connection.createStatement();
@@ -156,8 +160,9 @@ public class Manager {
 			System.out.println(query);
 			while(rs.next()){
 				customer = new CustomerProfile();
-				//customer.setName(rs.getString("name"));	
+				customer.setName(rs.getString("name"));	
 				customer.setUsername(rs.getString("username"));
+
 				//customer.setState(rs.getString("state"));
 				//customer.setPhoneNumber(rs.getString("phone_number"));
 				//customer.setEmailAddress(rs.getString("email_address"));
