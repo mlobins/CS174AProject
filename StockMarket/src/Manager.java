@@ -53,7 +53,16 @@ public class Manager {
 		// manager should know its the end of the month
 		String query = "UPDATE MarketAccounts" + " SET balance = balance + (averageDailyBalance * 0.03 ) ;";
 		Communications.runQuery(query);
-
+		
+		//Start connecting to database to retrieve list all market accounts or customer profile to input run a and for each market account create a transaction
+		//into func insertTransactionAccrueInterest( int transaction_type, String username, double accrue_interest)
+		ResultSet rs = null;
+		Connection connection = null;
+		Statement statement = null;
+		
+		
+		
+		
 		// also resets totalInterest = 0 for new month
 		String query1 = "UPDATE MarketAccounts" + " SET averageDailyBalance  = 0.0 ; ";
 		Communications.runQuery(query1);
@@ -186,8 +195,6 @@ public class Manager {
 		System.out.printf("Amount of active customers %d %n" , customers.size());
 		for (int i = 0; i < customers.size(); i++) {
 			System.out.println("Name:   " + customers.get(i).getName());
-
-			System.out.println("------");
 		}
 		System.out.println("----------------------------");
 

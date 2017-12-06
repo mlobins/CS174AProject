@@ -5,9 +5,9 @@ import java.sql.Statement;
 import java.util.Scanner;
 
 //Changes::
-//Manager. public static void generateMonthlyStatement(String username) 
-//			public static void generateActiveCustomers()
-//transactions.	public int getTransactionTypeNumber()   // new func
+//Communications. public static void insertTransactionAccrueInterest( int transaction_type, String username, double accrue_interest)
+//globals.public static String getTodaysDate()
+//Manager. public static void addInterest()
 
 
 
@@ -42,59 +42,50 @@ public class Communications {
 				+ "email_address VARCHAR(25) NOT NULL, " + "taxid VARCHAR(25) NOT NULL, "
 				+ "password VARCHAR(25) NOT NULL " + ") ;";
 		System.out.printf("%s", query);
-
 		runQuery(query);
 	}
+
 
 	public static void createMarketAccounts() {
 
 		String query = "CREATE TABLE MarketAccounts " + "( username VARCHAR(25) NOT NULL, " + "balance DOUBLE(20, 2), "
-				+ "transid INTEGER, " + "account_mid INTEGER, " + "PRIMARY KEY (account_mid) "
-				+ ", FOREIGN KEY (username) REFERENCES CustomerProfile (username)" + ");";
+				+ "account_mid INTEGER AUTO_INCREMENT, " + "averageDailyBalance INTEGER, "
+				+ "PRIMARY KEY (account_mid) " + ", FOREIGN KEY (username) REFERENCES CustomerProfile (username)"
+				+ ");";
 		System.out.printf("%s%n", query);
-
 		runQuery(query);
 	}
 
 	public static void createStockAccounts() {
-		String query = "CREATE TABLE StockAccounts " + "( account_sid INTEGER, " + "stock_id CHAR(3), "
-				+ "balance DOUBLE(6,3), " + "buying_price INTEGER, " + "selling_price INTEGER, " + "transid INTEGER, "
+		String query = "CREATE TABLE StockAccounts " + "( account_sid INTEGER AUTO_INCREMENT, " + "stock_id CHAR(3), "
+				+ "balance DOUBLE(6,3), " + "buying_price INTEGER, " + "selling_price INTEGER, "
 				+ "username VARCHAR(25), " + "PRIMARY KEY (account_sid), " +
-				// "FOREIGN KEY (transid) REFERENCES TRANSACTION" +
 				// "FOREIGN KEY (stock_id) REFERENCES Stocks (stock_id)"
 				"FOREIGN KEY (username) REFERENCES CustomerProfile (username)) ;";
 		System.out.printf("%s", query);
-
 		runQuery(query);
 	}
 
 	public static void createStocks() {
 		String query = "CREATE TABLE Stocks " + "( stock_id CHAR(3), " + "ad_name CHAR(25), "
-				+ "closing_price DOUBLE(6,2), " + "current_price DOUBLE(6,2), " + "PRIMARY KEY(stock_id) " + // "FOREIGN
-																												// KEY(ad_name)
-																												// "
-																												// +
-																												// //REFERENCES
-																												// ActorDirectorProfile
-																												// (ad_name)
+				+ "closing_price DOUBLE(6,2), " + "current_price DOUBLE(6,2), " + "PRIMARY KEY(stock_id) " +
+				// FOREIGN KEY(ad_name) REFERENCES ActorDirectorProfile (ad_name)
 				");";
 		System.out.printf("%s", query);
-
 		runQuery(query);
 	}
 
 	public static void createActorDirectorProfile() {
 
-		String query = "CREATE TABLE ActorDirectorProfile " + "( ad_name CHAR(25), " + "stock_id CHAR(3), "
-				+ "dob INTEGER, " + "PRIMARY KEY(ad_name), " + "FOREIGN KEY(stock_id) REFERENCES Stocks (stock_id));";
+		String query = "CREATE TABLE ActorDirectorProfile " + "( ad_name CHAR(25), " + "dob INTEGER, "
+				+ "PRIMARY KEY(ad_name)) " + ";";
 		System.out.printf("%s", query);
 
 		runQuery(query);
 
 	}
-
 	public static void createContract() {
-		String query = "CREATE TABLE Contract" + "( contract_id INTEGER, " + "movie_title CHAR(255), "
+		String query = "CREATE TABLE Contract" + "( contract_id INTEGER AUTO_INCREMENT, " + "movie_title CHAR(255), "
 				+ "ad_name CHAR(25) , " + "role CHAR(255), " + "year INTEGER, " + "total_payment DOUBLE(6,3), "
 				+ "PRIMARY KEY(contract_id)," + " FOREIGN KEY (ad_name) REFERENCES ActorDirectorProfile (ad_name)"
 				+ ");";
@@ -103,22 +94,22 @@ public class Communications {
 
 	public static void createTransactions() {
 		String query = "Create Table Transactions "
-				+ "( transid INTEGER, username VARCHAR(25), transaction_type INTEGER, account_sid INTEGER, "
-				+ "account_mid INTEGER, " + "stock_id CHAR(3), " + "stock_quantity DOUBLE(6,3), "
-				+ "buying_price DOUBLE(6,2), " + "selling_price DOUBLE (6,2), " + "deposit DOUBLE (6,2), "
-				+ "withdraw DOUBLE (6,2), " + "accrue_interest DOUBLE (6,2), " + "dateOfTransaction DATE, "
-				+ "PRIMARY KEY (transid) " + //"FOREIGN KEY(username) REFERENCES CustomerProfile (username), "
-				//+ "FOREIGN KEY (account_sid) REFERENCES StockAccounts (accounts_sid)" + 
-				");";
-		System.out.printf("%s", query);
+				+ "( transid INTEGER AUTO_INCREMENT, username VARCHAR(25), transaction_type INTEGER, "
+				+ "stock_id CHAR(3), " + "stock_quantity DOUBLE(6,3), " + "buying_price DOUBLE(6,2), "
+				+ "selling_price DOUBLE (6,2), " + "deposit DOUBLE (6,2), " + "withdraw DOUBLE (6,2), "
+				+ "accrue_interest DOUBLE (6,2), " + "dateOfTransaction DATE, " + "PRIMARY KEY (transid) " + ");";
+		// "FOREIGN KEY(username) REFERENCES CustomerProfile(username)," + "FOREIGN KEY
+		// (account_sid) REFERENCES StockAccounts (accounts_sid)"
 
+		System.out.printf("%s", query);
 		runQuery(query);
 	}
 
 	public static void createDate() {
-		String query = "Create  TABLE Date" + "( todaysDate DATE ) ;";
+		String query = "Create TABLE Date" + "( todaysDate DATE ) ;";
 		runQuery(query);
 	}
+
 
 	public static void setDate(String todaysDate) {
 		String query = "INSERT INTO Date (todaysDate)" + "VALUES (" + todaysDate + " );";
@@ -543,6 +534,12 @@ public class Communications {
 	 * "WHERE account_mid = '" + account_mid + "' AND username = '" + username +
 	 * "' ;"; runQuery(query); }
 	 */
+	public static void insertTransactionAccrueInterest( int transaction_type, String username, double accrue_interest){
+		String query = "INSERT INTO Transactions ( username, transaction_type, accrue_interest, date ) VALUES ( '" 
+	+ username + "', '" + transaction_type + "' , '" + accrue_interest + "', " + Globals.getTodaysDate()   + " );";
+		runQuery(query);
+		
+	}
 	public static void updateStock(String stock_id, double current_price) {
 		String query = "UPDATE Stocks" + " SET current_price = " + current_price + " WHERE stock_id = '" + stock_id
 				+ "' ;";

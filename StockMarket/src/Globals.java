@@ -18,7 +18,7 @@ public class Globals {
 		return isMarketOpen;
 	}
 	
-	public String getTodaysDate() {
+	public static String getTodaysDate() {
 		return todaysDate;
 	}
 	
