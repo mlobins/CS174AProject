@@ -65,6 +65,7 @@ public class Debug {
 	public static void closeMarket() {
 		Globals.isMarketOpen = false;
 		Communications.updateStockClosingPrice();
+		Communications.accrueInterest();
 		System.out.println("Market is closed.");
 		Communications.nextDay();
 		// finish day

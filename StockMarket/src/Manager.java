@@ -14,7 +14,7 @@ public class Manager {
 			int choice = scanner.nextInt();
 			switch (choice) {
 			case (0):
-				addInterest(0);
+				addInterest();
 				break;
 			case (1):
 				System.out.println("Please enter username:");
@@ -43,14 +43,20 @@ public class Manager {
 		}
 	}
 
-	public static void addInterest(int username) {
-
-		System.out.println("HOY");
+	public static void addInterest() {
+		//manager should know its the end of the month
+		String query = "UPDATE MarketAccounts" + " SET balance = balance + (averageDailyBalance * 0.03 ) ;" ;
+		Communications.runQuery(query);
+		
+		// also resets totalInterest = 0  for new month
+		String query1 = "UPDATE MarketAccounts" + " SET averageDailyBalance  = 0.0 ; ";
+		Communications.runQuery(query1);
+				//"UPDATE MarketAccounts" + "SET  balance = " + deposit + "\n" + "WHERE username = '" + username
+				//+ "' ;";"
 	}
 
 	public static void generateMonthlyStatement(String username) {
 		// this works as long as all transactions delete from month to month
-		// how to pass username and account sid to this scope
 		String query = "SELECT * FROM Transactions" + " WHERE " + "username = " + username + ";";
 		Communications.runQuery(query);
 	}

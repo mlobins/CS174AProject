@@ -4,11 +4,24 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
 //Changes::
+//MarketAccounnts.private double averageDailyBalance;;  //new variable
+//					public double getAverageDailyBalance(){
+//				public void setAverageDailyBalance(double AverageDailyBalance)   // new set for variable
+//communications.public static MarketAccounts getMarketAccount(String username)
+//				public static void accrueInterest()  // new func
+//				public static void updateMarketAccount()		Update typo for all 3:
+//				public static void updateStockAccountSell()
+//				public static void updateStockAccountBuy()
+//
+//Manager.public static void addInterest()
+//			public static void manager() { }  Changed to: addInterest();
+//Debug.	public static void closeMarket()
+//Globals.public static double getNumberOfDaysInMonth()   // new func
 
-// Communication.updateClosingPrice()
-//Globals.setTodaysDate(String Date)
-//Debug.openMarket()
-//Communications.updateStock()
+
+
+
+
 public class Communications {
 	static Scanner scanner = new Scanner(System.in);
 
@@ -153,6 +166,11 @@ public class Communications {
 
 	}
 
+	public static void accrueInterest(){ //updates dailybalance
+		
+		String query = "UPDATE MarketAccounts SET averageDailyBalance = ( averageDailyBalance + (balance / " + Globals.getNumberOfDaysInMonth() + " ) );" ; 
+		runQuery(query);
+	}
 	public static void nextDay() {
 		String query = "UPDATE Date SET todaysDate = DATE_ADD( todaysDate, INTERVAL 1 DAY) ;";
 		runQuery(query);
@@ -275,7 +293,8 @@ public class Communications {
 				market_account.setBalance(rs.getInt("balance"));
 				market_account.setTransID(rs.getInt("transID"));
 				market_account.setUsername(rs.getString("username"));
-			}
+				market_account.setAverageDailyBalance(rs.getDouble("averageDailyBalance"));
+				}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -470,21 +489,21 @@ public class Communications {
 	}
 
 	public static void updateMarketAccount(int account_mid, int transID, String username, double deposit) {
-		String query = "UPDATE MarketAccounts" + "SET  balance = " + deposit + "\n" + "WHERE username = '" + username
+		String query = "UPDATE MarketAccounts" + " SET  balance = " + deposit + "\n" + "WHERE username = '" + username
 				+ "' ;";
 		runQuery(query);
 	}
 
 	public static void updateStockAccountSell(int account_sid, double selling_price, double stockQuantity,
 			String username) { // change parameters
-		String query = "UPDATE StockAccounts" + "SET selling_price = " + selling_price + ", balance = " + stockQuantity
+		String query = "UPDATE StockAccounts" + " SET selling_price = " + selling_price + ", balance = " + stockQuantity
 				+ "\n" + "WHERE account_sid = '" + account_sid + "' AND username = '" + username + "' ;";
 		runQuery(query);
 	}
 
 	public static void updateStockAccountBuy(int account_sid, double buying_price, double stockQuantity,
 			String username) {
-		String query = "UPDATE StockAccounts" + "SET buying_price = " + buying_price + ", balance = " + stockQuantity
+		String query = "UPDATE StockAccounts" + " SET buying_price = " + buying_price + ", balance = " + stockQuantity
 				+ "\n" + "WHERE account_sid = '" + account_sid + "' AND username = '" + username + "' ;";
 		runQuery(query);
 	}

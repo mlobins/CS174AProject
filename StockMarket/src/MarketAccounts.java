@@ -6,6 +6,15 @@ public class MarketAccounts {
 	private double balance;
 	private int transID;
 	private String username;
+	private double averageDailyBalance;
+	
+	public double getAverageDailyBalance(){
+		return averageDailyBalance;
+	}
+	
+	public void setAverageDailyBalance(double AverageDailyBalance){
+		averageDailyBalance = AverageDailyBalance;
+	}
 	
 	public int getAccountMID() {
 		return account_mid;
