@@ -85,8 +85,11 @@ public class Trader {
 
 		while (control == 1) {
 			System.out.println("\nDeposit, Withdraw, Buy, and Sell are unavailable if the market is closed.");
+			MarketControl.setTodaysDate();
 			System.out.println("The market is " + MarketControl.isMarketOpenText());
-			System.out.println("Deposit (0)\n" + "Withdraw (1)\n" + "Buy (2)\n" + "Sell (3)\n" + "Show Balance (4)\n"
+			System.out.println("Today is " + MarketControl.getMonth() + "/" + MarketControl.getDay() + "/"
+					+ MarketControl.getYear());
+			System.out.println("\nDeposit (0)\n" + "Withdraw (1)\n" + "Buy (2)\n" + "Sell (3)\n" + "Show Balance (4)\n"
 					+ "Show Transaction History of Stock Account (5)\n" + "Show Profile (6)\n" + "Movie Info (7)\n"
 					+ "Log Out (8)\n");
 			int choice = scanner.nextInt();
@@ -94,7 +97,7 @@ public class Trader {
 			case (0):
 				if (MarketControl.isMarketOpen() == true) {
 					System.out.println("Enter the amount you want to deposit: ");
-					double deposit = scanner.nextInt();
+					double deposit = scanner.nextDouble();
 					System.out.println("Deposit: " + deposit);
 					deposit(deposit, false);
 				} else {
@@ -104,7 +107,7 @@ public class Trader {
 			case (1):
 				if (MarketControl.isMarketOpen() == true) {
 					System.out.println("Enter the amount you want to deposit: ");
-					double withdraw = scanner.nextInt();
+					double withdraw = scanner.nextDouble();
 					System.out.println("Deposit: " + withdraw);
 					withdraw(withdraw, false);
 				} else {
@@ -115,7 +118,7 @@ public class Trader {
 				if (MarketControl.isMarketOpen() == true) {
 					buyDisplay();
 					System.out.println("How many stocks do you want to buy?: ");
-					double stockQuantity = scanner.nextInt();
+					double stockQuantity = scanner.nextDouble();
 					scanner.nextLine();
 					System.out.println("What stock do you want to buy?: ");
 					String stock_id2 = scanner.nextLine();
@@ -127,14 +130,14 @@ public class Trader {
 			case (3):
 				if (MarketControl.isMarketOpen() == true) {
 					sellDisplay();
+					System.out.println("Which account do you want to sell?: ");
+					int account_sid = scanner.nextInt();
 					System.out.println("How many stocks do you want to sell?: ");
-					double stockQuantity = scanner.nextInt();
-					System.out.println("Enter Buying Price.");
-					double buyingPrice = scanner.nextInt();
+					double stockQuantity = scanner.nextDouble();
 					scanner.nextLine();
 					System.out.println("What stock do you want to sell?: ");
 					String stock_id = scanner.nextLine();
-					sell(stock_id, stockQuantity, buyingPrice);
+					sell(account_sid, stock_id, stockQuantity);
 				} else {
 					System.out.println("Market is not open.");
 				}
@@ -197,9 +200,9 @@ public class Trader {
 		List<Stocks> stocks = Communications.getStocks();
 		System.out.println("----------------------------");
 		for (int i = 0; i < stocks.size(); i++) {
-			System.out.println("Stock ID: 				" + stocks.get(i).getStockID());
-			System.out.println("Actor/Director Name: 	" + stocks.get(i).getADName());
-			System.out.println("Current Price: 			" + stocks.get(i).getCurrentPrice());
+			System.out.println("Stock ID: " + stocks.get(i).getStockID());
+			System.out.println("Actor/Director Name: " + stocks.get(i).getADName());
+			System.out.println("Current Price: " + stocks.get(i).getCurrentPrice());
 			System.out.println("----------------------------");
 		}
 	}
@@ -208,23 +211,19 @@ public class Trader {
 		List<StockAccounts> stockAccounts = Communications.getStockAccounts(customer.getUsername());
 		System.out.println("----------------------------");
 		for (int i = 0; i < stockAccounts.size(); i++) {
-			System.out.println("Stock ID: 		" + stockAccounts.get(i).getAccountSID());
-			System.out.println("Buying Price: 	" + stockAccounts.get(i).getBuyingPrice());
-			System.out.println("Stock Quantity: " + stockAccounts.get(i).getBalance());
+			System.out.println("Account ID:	" + stockAccounts.get(i).getAccountSID());
+			System.out.println("Stock ID:	" + stockAccounts.get(i).getStockID());
+			System.out.println("Buying Price:	" + stockAccounts.get(i).getBuyingPrice());
+			System.out.println("Stock Quantity:	" + stockAccounts.get(i).getBalance());
 			System.out.println("----------------------------");
 		}
 	}
 
-	private static void sell(String stock_id, double stockQuantity, double buying_price) {
+	private static void sell(int account_sid, String stock_id, double stockQuantity) {
 		Stocks stock = Communications.getStock(stock_id);
 		double price = stock.getCurrentPrice() * stockQuantity - 20;
-		double balance = Communications.getStockAccount(customer.getUsername(), stock_id, buying_price).getBalance()
-				- stockQuantity;
-		// enter buy price manually
-		// update stockaccount to hold new balance, selling price
-		// check if sell amount is valid
-
-		Communications.updateStockAccountSell(stock.getCurrentPrice(), buying_price, balance, customer.getUsername());
+		double balance = Communications.getStockAccount(account_sid).getBalance() - stockQuantity;
+		Communications.updateStockAccountSell(account_sid, stock.getCurrentPrice(), balance);
 		Communications.insertTransactionSell(sellType, stock.getCurrentPrice(), stockQuantity, customer.getUsername());
 		deposit(price, true);
 
@@ -240,16 +239,16 @@ public class Trader {
 		System.out.println("----------------------------");
 		for (int i = 0; i < transactions.size(); i++) {
 			System.out.println("Transaction ID: 		" + transactions.get(i).getTransID());
-			System.out.println("Username: 				" + transactions.get(i).getUsername());
+			System.out.println("Username: 			" + transactions.get(i).getUsername());
 			System.out.println("Transaction Type: 		" + transactions.get(i).getTransactionType());
-			System.out.println("Stock ID: 				" + transactions.get(i).getStockID());
+			System.out.println("Stock ID: 			" + transactions.get(i).getStockID());
 			System.out.println("Stock Quantity: 		" + transactions.get(i).getStockQuantity());
 			System.out.println("Buying Price: 			" + transactions.get(i).getBuyingPrice());
 			System.out.println("Selling Price: 			" + transactions.get(i).getSellingPrice());
-			System.out.println("Deposit: 				" + transactions.get(i).getDeposit());
-			System.out.println("Withdraw: 				" + transactions.get(i).getWithdraw());
+			System.out.println("Deposit: 			" + transactions.get(i).getDeposit());
+			System.out.println("Withdraw: 			" + transactions.get(i).getWithdraw());
 			System.out.println("Accrue Interest: 		" + transactions.get(i).getAccrueInterest());
-			System.out.println("Date Of Transaction: 	" + transactions.get(i).getDateOfTransaction());
+			System.out.println("Date Of Transaction: 		" + transactions.get(i).getDateOfTransaction());
 			System.out.println("----------------------------");
 		}
 	}
@@ -258,7 +257,19 @@ public class Trader {
 		Stocks stock = Communications.getStock(stock_id);
 		System.out.println("Current Price: $" + stock.getCurrentPrice());
 		ActorDirectorProfile profile = Communications.getActorDirectorProfile(stock_id);
-		System.out.println(profile.toString());
+		System.out.println("----------------------------");
+		System.out.println("Actor/Director: 	" + profile.getADName());
+		System.out.println("DoB: 				" + profile.getDOB());
+		System.out.println("----------------------------");
+		List<Contract> contracts = Communications.getContracts(profile.getADName());
+		for (int i = 0; i < contracts.size(); i++) {
+			System.out.println("Contract ID: 	" + contracts.get(i).getContractID());
+			System.out.println("Movie Title: 	" + contracts.get(i).getMovieTitle());
+			System.out.println("Role: 			" + contracts.get(i).getRole());
+			System.out.println("Year: 			" + contracts.get(i).getYear());
+			System.out.println("Total Payment: 	" + contracts.get(i).getTotalPayment());
+			System.out.println("----------------------------");
+		}
 	}
 
 	private static void movieInfo() {

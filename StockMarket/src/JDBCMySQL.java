@@ -1,23 +1,17 @@
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.text.ParseException;
 import java.util.Scanner;
-//import com.theopentutorials.jdbc.db.DbUtil;
-//import com.theopentutorials.jdbc.db.JDBCMySQLConnection;
-//import com.theopentutorials.jdbc.to.Employee;
 
 //toDo
-//create the tables in the database
-//manager
-//trader (showtransactionhistory)
-//what happens if you buy 20 shares for $10 and then 10 shares for $20?
-//review sql queries
-//recover from exceptions
-//if market account balance goes to 0 call error!
-//if stock account balance goes to 0 delete it
+//if market account balance goes to 0 call error! (add constraint)
+//if stock account balance goes to 0 delete it (add constraint)
+//add foreign key constraints
+//stock id is not updated (add to update functions)
+//no date shows in transactions
+//date in single quotes
+//manager function (dter, accrue_interest, customer report)
+
 
 public class JDBCMySQL {
 	public static void main(String[] args) {
@@ -64,8 +58,6 @@ public class JDBCMySQL {
 					break;
 				}
 			}
-
-			// scanner.close();
 		}
 	}
 }

@@ -63,6 +63,15 @@ public class MarketControl {
 
 	}
 
+	public static void setTodaysDate() {
+		todaysDate = Communications.getDateString();
+		String yearMonthDay[] = todaysDate.split("-");
+		setYear(Integer.parseInt(yearMonthDay[0]));
+		setMonth(Integer.parseInt(yearMonthDay[1]));
+		setDay(Integer.parseInt(yearMonthDay[2]));
+
+	}
+
 	public static double getNumberOfDaysInMonth() {
 		double x;
 		if ((year % 4) == 0) {
