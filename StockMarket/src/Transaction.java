@@ -47,6 +47,10 @@ public class Transaction {
 	public String getDateOfTransaction(){
 		return dateOfTransaction;
 	}
+	
+	public int getTransactionTypeNumber(){
+		return transaction_type;
+	}
 	public void setTransactionType(int type) {
 		this.transaction_type = type;
 	}

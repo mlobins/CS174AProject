@@ -3,21 +3,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
-//Changes::
-//MarketAccounnts.private double averageDailyBalance;;  //new variable
-//					public double getAverageDailyBalance(){
-//				public void setAverageDailyBalance(double AverageDailyBalance)   // new set for variable
-//communications.public static MarketAccounts getMarketAccount(String username)
-//				public static void accrueInterest()  // new func
-//				public static void updateMarketAccount()		Update typo for all 3:
-//				public static void updateStockAccountSell()
-//				public static void updateStockAccountBuy()
-//
-//Manager.public static void addInterest()
-//			public static void manager() { }  Changed to: addInterest();
-//Debug.	public static void closeMarket()
-//Globals.public static double getNumberOfDaysInMonth()   // new func
 
+//Changes::
+//Manager. public static void generateMonthlyStatement(String username) 
+//			public static void generateActiveCustomers()
+//transactions.	public int getTransactionTypeNumber()   // new func
 
 
 
@@ -134,6 +124,7 @@ public class Communications {
 		String query = "INSERT INTO Date (todaysDate)" + "VALUES (" + todaysDate + " );";
 		runQuery(query);
 	}
+	
 
 	public static String getDateString() {
 		String date = null;

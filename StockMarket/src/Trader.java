@@ -36,7 +36,6 @@ public class Trader {
 				break;
 			}
 		}
-		scanner.close();
 	}
 
 	private static void register() {
@@ -73,7 +72,6 @@ public class Trader {
 		deposit(1000, false);
 		account_MID++;
 		trans_ID++;
-		scanner.close();
 	}
 
 	private static void login() {
@@ -82,7 +80,6 @@ public class Trader {
 		String username = scanner.nextLine();
 		customer = Communications.getCustomerProfile(username);
 		System.out.println("Your username is " + username);
-		scanner.close();
 		// goto trader
 		// add password functionality
 		// get customer profile
