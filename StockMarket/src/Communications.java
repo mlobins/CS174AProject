@@ -6,8 +6,8 @@ import java.util.Scanner;
 
 //Changes::
 //Communications. public static void insertTransactionAccrueInterest( int transaction_type, String username, double accrue_interest)
-//globals.public static String getTodaysDate()
-//Manager. public static void addInterest()
+//Manager. public static void addInterest() updated furthermore
+//				public static void generateDTER() 
 
 
 
@@ -535,8 +535,9 @@ public class Communications {
 	 * "' ;"; runQuery(query); }
 	 */
 	public static void insertTransactionAccrueInterest( int transaction_type, String username, double accrue_interest){
-		String query = "INSERT INTO Transactions ( username, transaction_type, accrue_interest, date ) VALUES ( '" 
-	+ username + "', '" + transaction_type + "' , '" + accrue_interest + "', " + Globals.getTodaysDate()   + " );";
+		String query = "INSERT INTO Transactions ( username, transaction_type, accrue_interest, dateOfTransaction ) VALUES ( '" 
+	+ username + "', '" + transaction_type + "' , '" + accrue_interest + "', '" + Globals.getTodaysDate()   + "' );";
+		System.out.println(query);
 		runQuery(query);
 		
 	}

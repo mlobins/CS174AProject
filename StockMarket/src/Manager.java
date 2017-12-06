@@ -31,7 +31,7 @@ public class Manager {
 				generateActiveCustomers();
 				break;
 			case (3):
-				generateDTER(0);
+				generateDTER();
 				break;
 			case (4):
 				generateCustomerReport();
@@ -60,15 +60,44 @@ public class Manager {
 		Connection connection = null;
 		Statement statement = null;
 		
+		List<MarketAccounts> marketAccounts = new ArrayList<MarketAccounts>();
+		MarketAccounts marketAccount = null;
+		String query2 = "SELECT * FROM MarketAccounts;";
+		
+
+		try {
+			connection = JDBCMySQLConnection.getConnection();
+			statement = connection.createStatement();
+			rs = statement.executeQuery(query2);
+			while(rs.next()){
+				marketAccount = new MarketAccounts();
+				marketAccount.setUsername(rs.getString("username"));
+				marketAccount.setAverageDailyBalance(rs.getDouble("averageDailyBalance"));
+				marketAccounts.add(marketAccount);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		for (int i = 0; i < marketAccounts.size(); i++) {
+			Communications.insertTransactionAccrueInterest(5, marketAccounts.get(i).getUsername(), (0.03 * marketAccounts.get(i).getAverageDailyBalance()));
+		}
 		
 		
+		
+		//end of Transaction Accrue interest
 		
 		// also resets totalInterest = 0 for new month
 		String query1 = "UPDATE MarketAccounts" + " SET averageDailyBalance  = 0.0 ; ";
 		Communications.runQuery(query1);
-		// "UPDATE MarketAccounts" + "SET balance = " + deposit + "\n" + "WHERE
-		// username = '" + username
-		// + "' ;";"
 	}
 
 	public static void generateMonthlyStatement(String username) {
@@ -153,10 +182,7 @@ public class Manager {
 
 		List<CustomerProfile> customers = new ArrayList<CustomerProfile>();
 		CustomerProfile customer = null;
-		//String query = "SELECT * " + "FROM CustomerProfile c, Transactions t "
-			//+ "WHERE  t.username = c.username " + "HAVING SUM(t.stock_quantity) >= 1000;";
-		//String query = "SELECT * " + "FROM CustomerProfile c, Transactions t " + "WHERE  SUM(t.stock_quantity) >= 1000 " + "AND t.username = c.username; ";
-		//String query = "SELECT SUM(t.stock_quantity) >= 1000, c.username FROM CustomerProfile c, Transactions t WHERE t.username = c.username; ";
+		
 		String query = "SELECT c.username, c.name,  SUM(t.stock_quantity) AS total_amount" +
 					" FROM CustomerProfile c INNER JOIN Transactions t " +
 					" ON c.username = t.username " +
@@ -171,12 +197,6 @@ public class Manager {
 				customer = new CustomerProfile();
 				customer.setName(rs.getString("name"));	
 				customer.setUsername(rs.getString("username"));
-
-				//customer.setState(rs.getString("state"));
-				//customer.setPhoneNumber(rs.getString("phone_number"));
-				//customer.setEmailAddress(rs.getString("email_address"));
-				//customer.setTaxID(rs.getString("taxid"));
-				//customer.setPassword(rs.getString("password"));
 				customers.add(customer);
 			}
 		} catch (SQLException e) {
@@ -202,12 +222,51 @@ public class Manager {
 
 	}
 
-	public static void generateDTER(int username) {
-		/*
-		 * String query = " SELECT c.username " +
-		 * "FROM CustomerProfile c, Transactions t " +
-		 * "WHERE t.username = c.username " + "AND SUM" /////
-		 */
+	public static void generateDTER() {
+		ResultSet rs = null;
+		Connection connection = null;
+		Statement statement = null;
+
+		List<CustomerProfile> customers = new ArrayList<CustomerProfile>();
+		CustomerProfile customer = null;
+		
+		String query = "SELECT c.username, c.name, c.state,  (SUM(t.selling_price) + SUM(t.accrue_interest)) AS total_amount" +
+				" FROM CustomerProfile c INNER JOIN Transactions t " +
+				" ON c.username = t.username " +
+				" GROUP BY c.username, c.name " +
+				" HAVING (SUM(t.selling_price) + SUM(t.accrue_interest) >= 10000); "; 
+		try {
+			connection = JDBCMySQLConnection.getConnection();
+			statement = connection.createStatement();
+			rs = statement.executeQuery(query);
+			System.out.println(query);
+			while(rs.next()){
+				customer = new CustomerProfile();
+				
+				customer.setName(rs.getString("name"));	
+				customer.setUsername(rs.getString("username"));
+				customer.setState(rs.getString("state"));
+				customers.add(customer);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		System.out.println("----------------------------");
+		System.out.printf("Amount of Customers on DTER: %d %n" , customers.size());
+		for (int i = 0; i < customers.size(); i++) {
+			System.out.printf("State: %s  Name: %s  %n", customers.get(i).getState(), customers.get(i).getName());
+		}
+		System.out.println("----------------------------");
+		
 	}
 
 	public static void generateCustomerReport() {
