@@ -1,5 +1,4 @@
 
-
 public class StockAccounts {
 
 	private int account_sid;
@@ -7,7 +6,6 @@ public class StockAccounts {
 	private double balance;
 	private double buying_price;
 	private double selling_price;
-	private int transID;
 	private String username;
 
 	public int getAccountSID() {
@@ -50,14 +48,6 @@ public class StockAccounts {
 		this.selling_price = selling_price;
 	}
 
-	public int getTransID() {
-		return transID;
-	}
-
-	public void setTransID(int transID) {
-		this.transID = transID;
-	}
-
 	public String getUsername() {
 		return username;
 	}
@@ -71,7 +61,7 @@ public class StockAccounts {
 	public String toString() {
 
 		return "StockAccounts [account_sid=" + account_sid + ", stock_id=" + stock_id + ", balance=" + balance
-				+ ", buying_price=" + buying_price + ", selling_price=" + selling_price + ", transID=" + transID
-				+ ", username=" + username + "]";
+				+ ", buying_price=" + buying_price + ", selling_price=" + selling_price + ", username=" + username
+				+ "]";
 	}
 }

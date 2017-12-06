@@ -43,10 +43,10 @@ public class Movies {
 	private static void movieInfo(int id) {
 		System.out.println("----------------------------");
 		Movie movie = MovieCommunications.getMovie(id);
-		System.out.println("Movie ID: " + movie.getMovieID());
-		System.out.println("Title: " + movie.getTitle());
-		System.out.println("Production Year: " + movie.getProductionYear());
-		System.out.println("Rating: " + movie.getRating());
+		System.out.println("Movie ID: 			" + movie.getMovieID());
+		System.out.println("Title:				" + movie.getTitle());
+		System.out.println("Production Year: 	" + movie.getProductionYear());
+		System.out.println("Rating: 			" + movie.getRating());
 		System.out.println("----------------------------");
 	}
 
@@ -54,10 +54,10 @@ public class Movies {
 		List<Movie> top_movie = MovieCommunications.getTopMovieInfo(lower_year, upper_year);
 		System.out.println("----------------------------");
 		for (int i = 0; i < top_movie.size(); i++) {
-			System.out.println("Movie ID: " + top_movie.get(i).getMovieID());
-			System.out.println("Title: " + top_movie.get(i).getTitle());
-			System.out.println("Production Year: " + top_movie.get(i).getProductionYear());
-			System.out.println("Rating: " + top_movie.get(i).getRating());
+			System.out.println("Movie ID: 			" + top_movie.get(i).getMovieID());
+			System.out.println("Title: 				" + top_movie.get(i).getTitle());
+			System.out.println("Production Year: 	" + top_movie.get(i).getProductionYear());
+			System.out.println("Rating:				" + top_movie.get(i).getRating());
 			System.out.println("----------------------------");
 		}
 	}
@@ -66,10 +66,10 @@ public class Movies {
 		List<MovieReview> movie_reviews = MovieCommunications.getMovieReview(movie_id);
 		System.out.println("----------------------------");
 		for (int i = 0; i < movie_reviews.size(); i++) {
-			System.out.println("Review ID: " + movie_reviews.get(i).getMovieReviewID());
-			System.out.println("Movie ID: " + movie_reviews.get(i).getMovieID());
-			System.out.println("Author: " + movie_reviews.get(i).getAuthor());
-			System.out.println("Review: " + movie_reviews.get(i).getReview());
+			System.out.println("Review ID: 	" + movie_reviews.get(i).getMovieReviewID());
+			System.out.println("Movie ID: 	" + movie_reviews.get(i).getMovieID());
+			System.out.println("Author: 	" + movie_reviews.get(i).getAuthor());
+			System.out.println("Review: 	" + movie_reviews.get(i).getReview());
 			System.out.println("----------------------------");
 		}
 

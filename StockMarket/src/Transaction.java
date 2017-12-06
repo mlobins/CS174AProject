@@ -4,8 +4,6 @@ public class Transaction {
 	private int transID;
 	private String username;
 	private int transaction_type;
-	private int account_sid;
-	private int account_mid;
 	private String stock_id;
 	private double stock_quantity;
 	private double buying_price;
@@ -21,6 +19,10 @@ public class Transaction {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public int getTransactionTypeNumber() {
+		return transaction_type;
 	}
 
 	public String getTransactionType() {
@@ -40,31 +42,16 @@ public class Transaction {
 		}
 	}
 
-	public void setDateOfTransaction(String date){
-		this.dateOfTransaction = date;
-	}
-
-	public String getDateOfTransaction(){
-		return dateOfTransaction;
-	}
 	public void setTransactionType(int type) {
 		this.transaction_type = type;
 	}
 
-	public int getAccountSID() {
-		return account_sid;
+	public String getDateOfTransaction() {
+		return dateOfTransaction;
 	}
 
-	public void setAccountSID(int account_sid) {
-		this.account_sid = account_sid;
-	}
-
-	public int getAccountMID() {
-		return account_mid;
-	}
-
-	public void setAccountMID(int account_mid) {
-		this.account_mid = account_mid;
+	public void setDateOfTransaction(String date) {
+		this.dateOfTransaction = date;
 	}
 
 	public String getStockID() {
@@ -136,9 +123,8 @@ public class Transaction {
 	public String toString() {
 
 		return "Transaction [transID=" + transID + ", username=" + username + ", transaction_type=" + transaction_type
-				+ ", account_sid=" + account_sid + "stock_id=" + stock_id + ", buying_price=" + buying_price
-				+ ", selling_price=" + selling_price + ", deposit=" + deposit + ", withdraw=" + withdraw
-				+ ", accrue_interest=" + accrue_interest + "]";
+				+ ", stock_id=" + stock_id + ", buying_price=" + buying_price + ", selling_price=" + selling_price
+				+ ", deposit=" + deposit + ", withdraw=" + withdraw + ", accrue_interest=" + accrue_interest + "]";
 	}
 
 }

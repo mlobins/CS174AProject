@@ -1,4 +1,10 @@
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Manager {
@@ -14,11 +20,11 @@ public class Manager {
 			int choice = scanner.nextInt();
 			switch (choice) {
 			case (0):
-				addInterest(0);
+				addInterest();
 				break;
 			case (1):
 				System.out.println("Please enter username:");
-				String username = scanner.nextLine();
+				String username = scanner.next();
 				generateMonthlyStatement(username);
 				break;
 			case (2):
@@ -43,30 +49,152 @@ public class Manager {
 		}
 	}
 
-	public static void addInterest(int username) {
+	public static void addInterest() {
+		// manager should know its the end of the month
+		String query = "UPDATE MarketAccounts" + " SET balance = balance + (averageDailyBalance * 0.03 ) ;";
+		Communications.runQuery(query);
 
-		System.out.println("HOY");
+		// also resets totalInterest = 0 for new month
+		String query1 = "UPDATE MarketAccounts" + " SET averageDailyBalance  = 0.0 ; ";
+		Communications.runQuery(query1);
+		// "UPDATE MarketAccounts" + "SET balance = " + deposit + "\n" + "WHERE
+		// username = '" + username
+		// + "' ;";"
 	}
 
 	public static void generateMonthlyStatement(String username) {
-		// this works as long as all transactions delete from month to month
-		// how to pass username and account sid to this scope
-		String query = "SELECT * FROM Transactions" + " WHERE " + "username = " + username + ";";
-		Communications.runQuery(query);
+		ResultSet rs = null;
+		Connection connection = null;
+		Statement statement = null;
+
+		List<Transaction> transactions = new ArrayList<Transaction>();
+		Transaction transaction = null;
+		String query = "SELECT * FROM Transactions" + " WHERE " + "username = '" + username + "';";
+
+		try {
+			connection = JDBCMySQLConnection.getConnection();
+			statement = connection.createStatement();
+			rs = statement.executeQuery(query);
+			while(rs.next()){
+				transaction = new Transaction();
+				transaction.setTransID(rs.getInt("transid"));
+				transaction.setUsername(rs.getString("username"));
+				transaction.setTransactionType(rs.getInt("transaction_type"));
+				transaction.setStockID(rs.getString("stock_id"));
+				transaction.setStockQuantity(rs.getDouble("stock_quantity"));
+				transaction.setBuyingPrice(rs.getDouble("buying_price"));
+				transaction.setSellingPrice(rs.getDouble("selling_price"));
+				transaction.setDeposit(rs.getDouble("deposit"));
+				transaction.setWithdraw(rs.getDouble("withdraw"));
+				transaction.setAccrueInterest(rs.getDouble("accrue_interest"));
+				transaction.setDateOfTransaction(rs.getString("dateOfTransaction"));	
+				transactions.add(transaction);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		
+		System.out.println("----------------------------");
+		for (int i = 0; i < transactions.size(); i++) {
+			System.out.println("Trans ID:            " + transactions.get(i).getTransID());
+			System.out.println("username:            "  + transactions.get(i).getUsername());
+			System.out.println("Transactiontype:     " + transactions.get(i).getTransactionType());
+			System.out.println("Stock ID :           " + transactions.get(i).getStockID());
+			System.out.println("Stock Quantity:      " + transactions.get(i).getStockQuantity());
+			switch(transactions.get(i).getTransactionTypeNumber()){
+			case 1:			
+				System.out.println("Buying Price:        " + transactions.get(i).getBuyingPrice());
+				break;
+			case 2:
+				System.out.println("Selling Price:       " + transactions.get(i).getSellingPrice());
+				break;
+			case 3:
+				System.out.println("WithDraw:            " + transactions.get(i).getWithdraw());
+				break;
+			case 4:
+				System.out.println("Deposit:             " + transactions.get(i).getDeposit());
+				break;
+			case 5:
+				System.out.println("Accrue Interest:     " + transactions.get(i).getAccrueInterest());
+				break;
+			default:
+				System.out.print("");	
+			}
+
+			
+			System.out.println("Date Of Transaction: " + transactions.get(i).getDateOfTransaction());
+
+			System.out.println("----------------------------");
+		}
 	}
 
 	public static void generateActiveCustomers() {
-		String query = "SELECT c.username " + "FROM CustomerProfile c, Transactions t "
-				+ "WHERE  t.username = c.username " + "AND SUM(t.stockCount)  >= 1000;";
-		Communications.runQuery(query);
+		ResultSet rs = null;
+		Connection connection = null;
+		Statement statement = null;
+
+		List<CustomerProfile> customers = new ArrayList<CustomerProfile>();
+		CustomerProfile customer = null;
+		//String query = "SELECT * " + "FROM CustomerProfile c, Transactions t "
+			//+ "WHERE  t.username = c.username " + "HAVING SUM(t.stock_quantity) >= 1000;";
+		//String query = "SELECT * " + "FROM CustomerProfile c, Transactions t " + "WHERE  SUM(t.stock_quantity) >= 1000 " + "AND t.username = c.username; ";
+		String query = "SELECT SUM(t.stock_quantity) >= 1000, c.username FROM CustomerProfile c, Transactions t WHERE t.username = c.username; ";
+		
+		try {
+			connection = JDBCMySQLConnection.getConnection();
+			statement = connection.createStatement();
+			rs = statement.executeQuery(query);
+			System.out.println(query);
+			while(rs.next()){
+				customer = new CustomerProfile();
+				//customer.setName(rs.getString("name"));	
+				customer.setUsername(rs.getString("username"));
+				//customer.setState(rs.getString("state"));
+				//customer.setPhoneNumber(rs.getString("phone_number"));
+				//customer.setEmailAddress(rs.getString("email_address"));
+				//customer.setTaxID(rs.getString("taxid"));
+				//customer.setPassword(rs.getString("password"));
+				customers.add(customer);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		System.out.println("----------------------------");
+		System.out.printf("Amount of active customers %d %n" , customers.size());
+		for (int i = 0; i < customers.size(); i++) {
+			System.out.println("Name:   " + customers.get(i).getName());
+
+			System.out.println("------");
+		}
+		System.out.println("----------------------------");
+
+		
 
 	}
 
 	public static void generateDTER(int username) {
 		/*
 		 * String query = " SELECT c.username " +
-		 * "FROM CustomerProfile c, Transactions t " + "WHERE t.username = c.username "
-		 * + "AND SUM" /////
+		 * "FROM CustomerProfile c, Transactions t " +
+		 * "WHERE t.username = c.username " + "AND SUM" /////
 		 */
 	}
 
@@ -77,8 +205,7 @@ public class Manager {
 	}
 
 	public static void deleteTransactions(int username) {
-		String query = "DROP TABLE Transactions;";
-		// recreate table or simply clean the table?
+		String query = "DROP FROM TABLE Transactions;";
 		Communications.runQuery(query);
 	}
 
