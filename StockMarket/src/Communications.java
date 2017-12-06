@@ -8,6 +8,8 @@ import java.util.Scanner;
 //Communications. public static void insertTransactionAccrueInterest( int transaction_type, String username, double accrue_interest)
 //Manager. public static void addInterest() updated furthermore
 //				public static void generateDTER() 
+//				public static void manager()
+// 		public static void generateCustomerReport(String usernameEntered) {
 
 
 
