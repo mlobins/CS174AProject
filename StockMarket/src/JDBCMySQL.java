@@ -52,7 +52,7 @@ public class JDBCMySQL {
 				int choice = scanner.nextInt();
 				switch (choice) {
 				case (0):
-					Trader.trader();
+					Trader.traderInit();
 					break;
 				case (1):
 					Manager.manager();

@@ -1,4 +1,10 @@
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Trader {
@@ -100,7 +106,7 @@ public class Trader {
 			case (0):
 				if (Globals.isMarketOpen() == true) {
 					System.out.println("Enter the amount you want to deposit: ");
-					double deposit = scanner.nextInt();
+					double deposit = scanner.nextDouble();
 					System.out.println("Deposit: " + deposit);
 					deposit(deposit, false);
 				} else {
@@ -110,7 +116,7 @@ public class Trader {
 			case (1):
 				if (Globals.isMarketOpen() == true) {
 					System.out.println("Enter the amount you want to deposit: ");
-					double deposit = scanner.nextInt();
+					double deposit = scanner.nextDouble();
 					System.out.println("Deposit: " + deposit);
 					deposit(deposit, false);
 				} else {
@@ -120,10 +126,11 @@ public class Trader {
 			case (2):
 				if (Globals.isMarketOpen() == true) {
 					System.out.println("What stock do you want to buy?: ");
-					String stock_id2 = scanner.nextLine();
+					String stock_id2 = scanner.next();
 					System.out.println("How many stocks do you want to buy?: ");
-					double stockQuantity = scanner.nextInt();
-					buy(stock_id2, stockQuantity);
+					double stockQuantity = scanner.nextDouble();
+					if(buy(stock_id2, stockQuantity))
+						System.out.printf("Purchase Successful%n");
 				} else {
 					System.out.println("Market is not open.");
 				}
@@ -168,7 +175,8 @@ public class Trader {
 
 	private static void deposit(double deposit, boolean buySell) {
 		MarketAccounts marketAccount = Communications.getMarketAccount(customer.getUsername());
-		double change = marketAccount.getBalance() + deposit; // check for below 0 balance
+		double change = marketAccount.getBalance() + deposit; // check for below
+																// 0 balance
 		Communications.updateMarketAccount(marketAccount.getAccountMID(), marketAccount.getTransID(),
 				marketAccount.getUsername(), change);
 		if (buySell == true) {
@@ -179,7 +187,9 @@ public class Trader {
 
 	private static void withdraw(double withdraw, boolean buySell) {
 		MarketAccounts marketAccount = Communications.getMarketAccount(customer.getUsername());
-		double change = marketAccount.getBalance() + withdraw; // check for below 0 balance
+		double change = marketAccount.getBalance() + withdraw; // check for
+																// below 0
+																// balance
 		Communications.updateMarketAccount(marketAccount.getAccountMID(), marketAccount.getTransID(),
 				marketAccount.getUsername(), change);
 		if (buySell == true) {
@@ -188,24 +198,38 @@ public class Trader {
 		}
 	}
 
-	private static void buy(String stock_id, double stockQuantity) {
+	private static boolean buy(String stock_id, double stockQuantity) {
+		boolean validPurchase = false;
 		Stocks stock = Communications.getStock(stock_id);
 		double price = stock.getCurrentPrice() * stockQuantity + 20;
 
-		StockAccounts stockAccount = Communications.getStockAccount(customer.getUsername(), stock_id,
-				stock.getCurrentPrice());
-		if (stockAccount == null) {
-			Communications.setStockAccount(account_SID, stock_id, stockQuantity, stock.getCurrentPrice(), 0, trans_ID,
-					customer.getUsername()); // add stats
-			account_SID++;
-			trans_ID++;
-			stockAccount = Communications.getStockAccount(customer.getUsername(), stock_id, stock.getCurrentPrice());
+		// Test if User has enough money
+
+		if (Communications.getMarketAccount(customer.getUsername()).getBalance() < price) {
+			System.out.printf("Not enough balance to make Purchase!%n");
 		}
-		Communications.updateStockAccountBuy(stockAccount.getAccountSID(), stockAccount.getBuyingPrice(),
-				stockAccount.getBalance(), customer.getUsername()); // buying price?
-		Communications.insertTransactionBuy(stockAccount.getAccountSID(), buyType, stock.getCurrentPrice(),
-				stockQuantity, customer.getUsername());
-		withdraw(price, true);
+		// End of test.
+		else {
+
+			StockAccounts stockAccount = Communications.getStockAccount(customer.getUsername(), stock_id,
+					stock.getCurrentPrice());
+			if (stockAccount == null) {
+				Communications.setStockAccount(account_SID, stock_id, stockQuantity, stock.getCurrentPrice(), 0,
+						trans_ID, customer.getUsername()); // add stats
+				account_SID++;
+				trans_ID++;
+				stockAccount = Communications.getStockAccount(customer.getUsername(), stock_id,
+						stock.getCurrentPrice());
+			}
+			Communications.updateStockAccountBuy(stockAccount.getAccountSID(), stockAccount.getBuyingPrice(),
+					stockAccount.getBalance(), customer.getUsername()); // buying
+																		// price?
+			Communications.insertTransactionBuy(stockAccount.getAccountSID(), buyType, stock.getCurrentPrice(),
+					stockQuantity, customer.getUsername());
+			withdraw(price, true);
+			validPurchase = true;
+		}
+		return validPurchase;
 	}
 
 	private static void sell(String stock_id, double stockQuantity) {
