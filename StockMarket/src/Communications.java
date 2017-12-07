@@ -62,29 +62,26 @@ public class Communications {
 	}
 
 	public static void createStocks() {
-		String query = "CREATE TABLE Stocks " + "( stock_id CHAR(3), " + "ad_name CHAR(25), "
+		String query = "CREATE TABLE Stocks " + "( stock_id CHAR(3), " + "ad_id INTEGER, ad_name CHAR(25), "
 				+ "closing_price DOUBLE(6,2), " + "current_price DOUBLE(6,2), " + "PRIMARY KEY(stock_id) " +
-				// FOREIGN KEY(ad_name) REFERENCES ActorDirectorProfile (ad_name)
+				// FOREIGN KEY(ad_id) REFERENCES ActorDirectorProfile (ad_id)
 				");";
 		System.out.printf("%s", query);
 		runQuery(query);
 	}
 
 	public static void createActorDirectorProfile() {
-
-		String query = "CREATE TABLE ActorDirectorProfile " + "( ad_name CHAR(25), " + "dob INTEGER, "
-				+ "PRIMARY KEY(ad_name);";
+		String query = "CREATE TABLE ActorDirectorProfile " + "( ad_id INTEGER AUTO_INCREMENT, ad_name CHAR(25), "
+				+ "dob INTEGER, " + "PRIMARY KEY(ad_id) );";
 		System.out.printf("%s", query);
-
 		runQuery(query);
-
 	}
 
 	public static void createContract() {
 		String query = "CREATE TABLE Contract" + "( contract_id INTEGER AUTO_INCREMENT, " + "movie_title CHAR(255), "
-				+ "ad_name CHAR(25) , " + "role CHAR(255), " + "year INTEGER, " + "total_payment DOUBLE(6,3), "
-				+ "PRIMARY KEY(contract_id)," + " FOREIGN KEY (ad_name) REFERENCES ActorDirectorProfile (ad_name)"
-				+ ");";
+				+ "ad_id INTEGER, ad_name CHAR(25), " + "role CHAR(255), " + "year INTEGER, "
+				+ "total_payment DOUBLE(6,3), " + "PRIMARY KEY(contract_id),"
+				+ " FOREIGN KEY (ad_id) REFERENCES ActorDirectorProfile (ad_id)" + ");";
 		runQuery(query);
 	}
 
@@ -94,8 +91,6 @@ public class Communications {
 				+ "stock_id CHAR(3), " + "stock_quantity DOUBLE(6,3), " + "buying_price DOUBLE(6,2), "
 				+ "selling_price DOUBLE (6,2), " + "deposit DOUBLE (6,2), " + "withdraw DOUBLE (6,2), "
 				+ "accrue_interest DOUBLE (6,2), " + "dateOfTransaction DATE, " + "PRIMARY KEY (transid) " + ");";
-		// "FOREIGN KEY(username) REFERENCES CustomerProfile(username),"
-
 		System.out.printf("%s", query);
 		runQuery(query);
 	}
@@ -175,10 +170,10 @@ public class Communications {
 		runQuery(query);
 	}
 
-	public static void setStocks(String stock_id, String ad_name, int closing_price, int current_price) {
-		String query = "INSERT INTO Stocks (stock_id, ad_name, closing_price, current_price) " + "VALUES (" + "\""
-				+ stock_id + "\"" + "," + "\"" + ad_name + "\"" + "," + "\"" + closing_price + "\"" + "," + "\""
-				+ current_price + "\"" + ");";
+	public static void setStocks(int ad_id, String stock_id, String ad_name, int closing_price, int current_price) {
+		String query = "INSERT INTO Stocks (ad_id, stock_id, ad_name, closing_price, current_price) " + "VALUES (" + "\""
+				+ ad_id + "\"" + "," + "\"" + stock_id + "\"" + "," + "\"" + ad_name + "\"" + "," + "\"" + closing_price
+				+ "\"" + "," + "\"" + current_price + "\"" + ");";
 		runQuery(query);
 	}
 
@@ -188,10 +183,11 @@ public class Communications {
 		runQuery(query);
 	}
 
-	public static void setContract(String ad_name, String movie_title, String role, int year, int total_payment) {
-		String query = "INSERT INTO Contract (ad_name, movie_title, role, year, total_payment) " + "VALUES (" + "\""
-				+ ad_name + "\"" + "," + "\"" + movie_title + "\"" + "," + "\"" + role + "\"" + "," + "\"" + year + "\""
-				+ "," + "\"" + total_payment + "\"" + ");";
+	public static void setContract(int ad_id, String ad_name, String movie_title, String role, int year,
+			int total_payment) {
+		String query = "INSERT INTO Contract (ad_id, ad_name, movie_title, role, year, total_payment) " + "VALUES ("
+				+ "\"" + ad_id + "\"" + "," + "\"" + ad_name + "\"" + "," + "\"" + movie_title + "\"" + "," + "\""
+				+ role + "\"" + "," + "\"" + year + "\"" + "," + "\"" + total_payment + "\"" + ");";
 		runQuery(query);
 	}
 
@@ -282,8 +278,7 @@ public class Communications {
 		Statement statement = null;
 
 		StockAccounts stock_account = null;
-		String query = "SELECT * FROM StockAccounts WHERE account_sid = " + "\"" + account_sid + "\""
-				+ ";";
+		String query = "SELECT * FROM StockAccounts WHERE account_sid = " + "\"" + account_sid + "\"" + ";";
 		try {
 			connection = JDBCMySQLConnection.getConnection();
 			statement = connection.createStatement();
@@ -363,6 +358,41 @@ public class Communications {
 			if (rs.next()) {
 				stock = new Stocks();
 				stock.setStockID(rs.getString("stock_id"));
+				stock.setADID(rs.getInt("ad_id"));
+				stock.setADName(rs.getString("ad_name"));
+				stock.setClosingPrice(rs.getInt("closing_price"));
+				stock.setCurrentPrice(rs.getInt("current_price"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return stock;
+	}
+
+	public static Stocks getStock(int ad_id) {
+		ResultSet rs = null;
+		Connection connection = null;
+		Statement statement = null;
+
+		Stocks stock = null;
+		String query = "SELECT * FROM Stocks WHERE ad_id = " + "\"" + ad_id + "\"" + ";";
+		try {
+			connection = JDBCMySQLConnection.getConnection();
+			statement = connection.createStatement();
+			rs = statement.executeQuery(query);
+
+			if (rs.next()) {
+				stock = new Stocks();
+				stock.setStockID(rs.getString("stock_id"));
+				stock.setADID(rs.getInt("ad_id"));
 				stock.setADName(rs.getString("ad_name"));
 				stock.setClosingPrice(rs.getInt("closing_price"));
 				stock.setCurrentPrice(rs.getInt("current_price"));
@@ -397,6 +427,7 @@ public class Communications {
 			while (rs.next()) {
 				stock = new Stocks();
 				stock.setStockID(rs.getString("stock_id"));
+				stock.setADID(rs.getInt("ad_id"));
 				stock.setADName(rs.getString("ad_name"));
 				stock.setClosingPrice(rs.getInt("closing_price"));
 				stock.setCurrentPrice(rs.getInt("current_price"));
@@ -416,13 +447,13 @@ public class Communications {
 		return stocks;
 	}
 
-	public static ActorDirectorProfile getActorDirectorProfile(String stock_id) {
+	public static ActorDirectorProfile getActorDirectorProfile(int ad_id) {
 		ResultSet rs = null;
 		Connection connection = null;
 		Statement statement = null;
 
 		ActorDirectorProfile actor_director = null;
-		String query = "SELECT * FROM ActorDirectorProfile WHERE stock_id = " + "\"" + stock_id + "\"" + ";";
+		String query = "SELECT * FROM ActorDirectorProfile WHERE ad_id = " + "\"" + ad_id + "\"" + ";";
 		try {
 			connection = JDBCMySQLConnection.getConnection();
 			statement = connection.createStatement();
@@ -430,6 +461,8 @@ public class Communications {
 
 			if (rs.next()) {
 				actor_director = new ActorDirectorProfile();
+				actor_director.setADID(rs.getInt("ad_id"));
+				;
 				actor_director.setADName(rs.getString("ad_name"));
 				actor_director.setDOB(rs.getInt("dob"));
 			}
@@ -447,13 +480,48 @@ public class Communications {
 		return actor_director;
 	}
 
-	public static Contract getContract(String ad_name) {
+	public static List<ActorDirectorProfile> getActorDirectorProfiles() {
+		ResultSet rs = null;
+		Connection connection = null;
+		Statement statement = null;
+
+		List<ActorDirectorProfile> actor_directors = new ArrayList<ActorDirectorProfile>();
+		ActorDirectorProfile actor_director = null;
+		String query = "SELECT * FROM ActorDirectorProfile" + ";";
+		try {
+			connection = JDBCMySQLConnection.getConnection();
+			statement = connection.createStatement();
+			rs = statement.executeQuery(query);
+
+			while (rs.next()) {
+				actor_director = new ActorDirectorProfile();
+				actor_director.setADID(rs.getInt("ad_id"));
+				;
+				actor_director.setADName(rs.getString("ad_name"));
+				actor_director.setDOB(rs.getInt("dob"));
+				actor_directors.add(actor_director);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return actor_directors;
+	}
+
+	public static Contract getContract(int ad_id) {
 		ResultSet rs = null;
 		Connection connection = null;
 		Statement statement = null;
 
 		Contract contract = null;
-		String query = "SELECT * FROM Contracts WHERE ad_name = " + "\"" + ad_name + "\"" + ";";
+		String query = "SELECT * FROM Contract WHERE ad_id = " + "\"" + ad_id + "\"" + ";";
 		try {
 			connection = JDBCMySQLConnection.getConnection();
 			statement = connection.createStatement();
@@ -461,6 +529,7 @@ public class Communications {
 
 			if (rs.next()) {
 				contract = new Contract();
+				contract.setADID(rs.getInt("ad_id"));
 				contract.setADName(rs.getString("ad_name"));
 				contract.setContractID(rs.getInt("contract_id"));
 				contract.setMovieTitle(rs.getString("movie_title"));
@@ -482,14 +551,14 @@ public class Communications {
 		return contract;
 	}
 
-	public static List<Contract> getContracts(String ad_name) {
+	public static List<Contract> getContracts(int ad_id) {
 		ResultSet rs = null;
 		Connection connection = null;
 		Statement statement = null;
 
 		List<Contract> contracts = new ArrayList<Contract>();
 		Contract contract = null;
-		String query = "SELECT * FROM Contracts WHERE ad_name = " + "\"" + ad_name + "\"" + ";";
+		String query = "SELECT * FROM Contract WHERE ad_id = " + "\"" + ad_id + "\"" + ";";
 		try {
 			connection = JDBCMySQLConnection.getConnection();
 			statement = connection.createStatement();
@@ -497,6 +566,7 @@ public class Communications {
 
 			while (rs.next()) {
 				contract = new Contract();
+				contract.setADID(rs.getInt("ad_id"));
 				contract.setADName(rs.getString("ad_name"));
 				contract.setContractID(rs.getInt("contract_id"));
 				contract.setMovieTitle(rs.getString("movie_title"));
@@ -562,6 +632,49 @@ public class Communications {
 		return transactions;
 	}
 
+	public static List<Transaction> getTransactionsHistory(String username, String stock_id) {
+		ResultSet rs = null;
+		Connection connection = null;
+		Statement statement = null;
+
+		List<Transaction> transactions = new ArrayList<Transaction>();
+		Transaction transaction = null;
+		String query = "SELECT * FROM Transactions WHERE username = " + "\"" + username + "\"" + " AND stock_id = "
+				+ "\"" + stock_id + "\"" + ";";
+		try {
+			connection = JDBCMySQLConnection.getConnection();
+			statement = connection.createStatement();
+			rs = statement.executeQuery(query);
+
+			while (rs.next()) {
+				transaction = new Transaction();
+				transaction.setTransID((rs.getInt("transID")));
+				transaction.setUsername((rs.getString("username")));
+				transaction.setTransactionType((rs.getInt("transaction_type")));
+				transaction.setStockID(rs.getString("stock_id"));
+				transaction.setStockQuantity(rs.getDouble("stock_quantity"));
+				transaction.setDateOfTransaction(rs.getString("dateOfTransaction"));
+				transaction.setWithdraw((rs.getDouble("withdraw")));
+				transaction.setBuyingPrice(rs.getDouble("buying_price"));
+				transaction.setSellingPrice((rs.getDouble("selling_price")));
+				transaction.setDeposit(rs.getDouble("deposit"));
+				transaction.setAccrueInterest(rs.getDouble("accrue_interest"));
+				transactions.add(transaction);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return transactions;
+	}
+
 	public static List<Transaction> getTransactionsHistory(String username) {
 		ResultSet rs = null;
 		Connection connection = null;
@@ -580,14 +693,14 @@ public class Communications {
 				transaction.setTransID((rs.getInt("transID")));
 				transaction.setUsername((rs.getString("username")));
 				transaction.setTransactionType((rs.getInt("transaction_type")));
-				transaction.setStockQuantity(rs.getDouble("stock_quantity"));
 				transaction.setStockID(rs.getString("stock_id"));
+				transaction.setStockQuantity(rs.getDouble("stock_quantity"));
+				transaction.setDateOfTransaction(rs.getString("dateOfTransaction"));
+				transaction.setWithdraw((rs.getDouble("withdraw")));
 				transaction.setBuyingPrice(rs.getDouble("buying_price"));
 				transaction.setSellingPrice((rs.getDouble("selling_price")));
 				transaction.setDeposit(rs.getDouble("deposit"));
-				transaction.setWithdraw((rs.getDouble("withdraw")));
 				transaction.setAccrueInterest(rs.getDouble("accrue_interest"));
-				transaction.setDateOfTransaction(rs.getString("dateOfTransaction"));
 				transactions.add(transaction);
 			}
 		} catch (SQLException e) {
@@ -612,30 +725,31 @@ public class Communications {
 
 	public static void updateStockAccountSell(int account_sid, double selling_price, double stockQuantity) {
 		String query = "UPDATE StockAccounts " + "SET selling_price = " + selling_price + ", balance = " + stockQuantity
-				+ " WHERE account_sid = " + account_sid + ";";
+				+ " WHERE account_sid = " + "'" + account_sid + "'" + ";";
 		runQuery(query);
 	}
 
-	public static void updateStockAccountBuy(double buying_price, double stockQuantity, String username) {
+	public static void updateStockAccountBuy(int account_sid, double buying_price, double stockQuantity) {
 		String query = "UPDATE StockAccounts " + "SET buying_price = " + buying_price + ", balance = " + stockQuantity
-				+ "WHERE username = " + "'" + username + "'" + " ;";
+				+ "WHERE account_sid = " + "'" + account_sid + "'" + " ;";
 		runQuery(query);
 	}
 
+	// stock_id
 	public static void insertTransactionSell(int transaction_type, double selling_price, double stock_quantity,
-			String username) {
+			String username, String stock_id) {
 		String query = "INSERT INTO Transactions( "
-				+ "selling_price, transaction_type, stock_quantity, username, dateOfTransaction )" + " VALUES ("
-				+ selling_price + ", " + transaction_type + ", " + stock_quantity + ", " + "'" + username + "'" + ", "
-				+ "'" + MarketControl.todaysDate + "'" + " );";
+				+ "selling_price, transaction_type, stock_quantity, username, dateOfTransaction, stock_id )"
+				+ " VALUES (" + selling_price + ", " + transaction_type + ", " + stock_quantity + ", " + "'" + username
+				+ "'" + ", " + "'" + MarketControl.todaysDate + "', '" + stock_id + "' );";
 		runQuery(query);
 	}
 
 	public static void insertTransactionBuy(int transaction_type, double buying_price, double stock_quantity,
-			String username) {
-		String query = "INSERT INTO Transactions (buying_price, transaction_type,  stock_quantity, username, dateOfTransaction)"
+			String username, String stock_id) {
+		String query = "INSERT INTO Transactions (buying_price, transaction_type,  stock_quantity, username, dateOfTransaction, stock_id )"
 				+ " VALUES (" + buying_price + ", " + transaction_type + ", " + stock_quantity + ", " + "'" + username
-				+ "'" + ", " + MarketControl.todaysDate + " )" + ";";
+				+ "'" + ", '" + MarketControl.todaysDate + "', '" + stock_id + "' );";
 		runQuery(query);
 	}
 
@@ -643,24 +757,26 @@ public class Communications {
 
 		String query = "INSERT INTO Transactions (" + "deposit, transaction_type,  username, dateOfTransaction) "
 				+ "VALUES (" + "'" + deposit + "'" + ", " + "'" + transaction_type + "'" + ", " + "'" + username + "'"
-				+ ", " + "'" + MarketControl.todaysDate + "'" + ") ;";
+				+ ", " + "'" + MarketControl.todaysDate + "');";
 		runQuery(query);
 	}
 
 	public static void insertTransactionWithdraw(int transaction_type, double withdraw, String username) {
-		String query = "INSERT INTO Transactions (" + "withdraw, transaction_type,  username, dateOfTransaction) "
-				+ "VALUES (" + withdraw + ", " + transaction_type + ", " + "'" + username + "'" + ", "
-				+ MarketControl.todaysDate + ") ;";
+		String query = "INSERT INTO Transactions ( withdraw, transaction_type, username, dateOfTransaction ) "
+				+ " VALUES (" + withdraw + ", " + transaction_type + ", '" + username + "', '"
+				+ MarketControl.todaysDate + "');";
 		runQuery(query);
 	}
 
-	/*
-	 * public static void insertTransactionAccrueInterest(int transaction_type,
-	 * double accrue_interest, String username) { String query =
-	 * "INSERT INTOI Transactions " + "SET accrue_interest = " + accrue_interest +
-	 * ", transaction_type = " + transaction_type + " WHERE username = " + "'" +
-	 * username + "'" + " ;"; runQuery(query); }
-	 */
+	public static void insertTransactionAccrueInterest(int transaction_type, String username, double accrue_interest) {
+		String query = "INSERT INTO Transactions ( username, transaction_type, accrue_interest, dateOfTransaction) VALUES ( '"
+				+ username + "', '" + transaction_type + "' , '" + accrue_interest + "', '"
+				+ MarketControl.getTodaysDate() + ");";
+		System.out.println(query);
+		runQuery(query);
+
+	}
+
 	public static void updateStock(String stock_id, double current_price) {
 		String query = "UPDATE Stocks " + "SET current_price = " + current_price + " WHERE stock_id = '" + stock_id
 				+ "';";

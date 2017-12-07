@@ -4,13 +4,10 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 //toDo
+//sql math buy/sell/accrue_interest
 //if market account balance goes to 0 call error! (add constraint)
 //if stock account balance goes to 0 delete it (add constraint)
 //add foreign key constraints
-//stock id is not updated (add to update functions)
-//no date shows in transactions
-//date in single quotes
-//manager function (dter, accrue_interest, customer report)
 
 
 public class JDBCMySQL {

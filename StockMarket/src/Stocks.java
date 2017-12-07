@@ -3,6 +3,7 @@
 public class Stocks {
 
 	private String stock_id;
+	private int ad_id;
 	private String ad_name;
 	private double closing_price;
 	private double current_price;
@@ -14,7 +15,15 @@ public class Stocks {
 	public void setStockID(String stock_id) {
 		this.stock_id = stock_id;
 	}
-
+	
+	public int getADID() {
+		return ad_id;
+	}
+	
+	public void setADID(int ad_id) {
+		this.ad_id = ad_id;
+	}
+	
 	public String getADName() {
 		return ad_name;
 	}

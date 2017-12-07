@@ -26,7 +26,7 @@ public class MarketControl {
 			return "closed.";
 	}
 
-	public String getTodaysDate() {
+	public static String getTodaysDate() {
 		return todaysDate;
 	}
 

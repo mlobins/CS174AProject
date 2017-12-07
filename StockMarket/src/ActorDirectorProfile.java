@@ -2,8 +2,17 @@
 
 public class ActorDirectorProfile {
 	
+	private int ad_id;
 	private String ad_name;
 	private int dob;
+	
+	public int getADID() {
+		return ad_id;
+	}
+	
+	public void setADID(int ad_id) {
+		this.ad_id = ad_id;
+	}
 	
 	public String getADName() {
 		return ad_name;
