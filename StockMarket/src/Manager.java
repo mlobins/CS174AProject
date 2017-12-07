@@ -143,7 +143,7 @@ public class Manager {
 			}
 		}
 
-		System.out.println("----------------------------");
+		System.out.println("---------------------------------------------------------------");
 		for (int i = 0; i < transactions.size(); i++) {
 			System.out.println("Trans ID:            " + transactions.get(i).getTransID());
 			System.out.println("username:            " + transactions.get(i).getUsername());
@@ -172,7 +172,7 @@ public class Manager {
 
 			System.out.println("Date Of Transaction: " + transactions.get(i).getDateOfTransaction());
 
-			System.out.println("----------------------------");
+			System.out.println("---------------------------------------------------------------");
 		}
 	}
 
@@ -210,13 +210,13 @@ public class Manager {
 			}
 		}
 
-		System.out.println("----------------------------");
+		System.out.println("---------------------------------------------------------------");
 		System.out.printf("Amount of active customers %d %n", customers.size());
 		for (int i = 0; i < customers.size(); i++) {
 			System.out.printf(" Name: %s	%n Username: %s%n%n", customers.get(i).getName(),
 					customers.get(i).getUsername());
 		}
-		System.out.println("----------------------------");
+		System.out.println("---------------------------------------------------------------");
 
 	}
 
@@ -257,13 +257,13 @@ public class Manager {
 			}
 		}
 
-		System.out.println("----------------------------");
+		System.out.println("---------------------------------------------------------------");
 		System.out.printf("Amount of Customers on DTER: %d %n", customers.size());
 		for (int i = 0; i < customers.size(); i++) {
 			System.out.printf("Username: %s %nState: %s  Name: %s  %n", customers.get(i).getUsername(),
 					customers.get(i).getState(), customers.get(i).getName());
 		}
-		System.out.println("----------------------------");
+		System.out.println("---------------------------------------------------------------");
 
 	}
 
@@ -301,10 +301,10 @@ public class Manager {
 		}
 		System.out.printf("%n%nMarket Accounts for %s :%n", usernameEntered);
 		for (int i = 0; i < marketAccounts.size(); i++) {
-			System.out.printf("-----------------------------------%n");
+			System.out.printf("----------------------------------------------------------------------%n");
 			System.out.printf("account_mid : %d  balance: %f%n",  marketAccounts.get(i).getAccountMID(), marketAccounts.get(i).getBalance());  
 		}
-		System.out.printf("------------------------------------%n%n");
+		System.out.printf("-----------------------------------------------------------------------%n%n");
 		
 		// stockAccounts associated with username
 		ResultSet rs1 = null;
@@ -343,10 +343,11 @@ public class Manager {
 		
 		System.out.printf("%nStock Accounts:%n");
 		for (int i = 0; i < stockAccounts.size(); i++) {
-			System.out.println("-----------------------------------");
+			System.out.println("----------------------------------------------------------------------");
 			System.out.printf("account_sid : %d%n stock_id = %s%n balance = %f%n Selling Price = %f%n Buying Price = %f%n "
 					, stockAccounts.get(i).getAccountSID(), stockAccounts.get(i).getStockID(), stockAccounts.get(i).getBalance(),
 					stockAccounts.get(i).getBuyingPrice(), stockAccounts.get(i).getSellingPrice());  
+			System.out.println("----------------------------------------------------------------------");
 			
 		}
 

@@ -14,6 +14,7 @@ public class Movies {
 
 			switch (choice) {
 			case (0):
+				displayMovies();
 				System.out.println("Enter the id of the movie: ");
 				int id = scanner.nextInt();
 				movieInfo(id);
@@ -26,6 +27,7 @@ public class Movies {
 				topMovieInfo(lower_year, upper_year);
 				break;
 			case (2):
+				displayMovies();
 				System.out.println("Enter the id of the movie: ");
 				int movie_id = scanner.nextInt();
 				movieReviewInfo(movie_id);
@@ -40,37 +42,47 @@ public class Movies {
 		}
 	}
 
+	private static void displayMovies() {
+		List<Movie> movies = MovieCommunications.getMovies();
+		System.out.println("---------------------------------------------------------------");
+		for (int i = 0; i < movies.size(); i++) {
+			System.out.println("Movie ID: " + movies.get(i).getMovieID());
+			System.out.println("Title: " + movies.get(i).getTitle());
+			System.out.println("---------------------------------------------------------------");
+		}
+	}
+	
 	private static void movieInfo(int id) {
-		System.out.println("----------------------------");
+		System.out.println("---------------------------------------------------------------");
 		Movie movie = MovieCommunications.getMovie(id);
-		System.out.println("Movie ID: 			" + movie.getMovieID());
-		System.out.println("Title:				" + movie.getTitle());
-		System.out.println("Production Year: 	" + movie.getProductionYear());
-		System.out.println("Rating: 			" + movie.getRating());
-		System.out.println("----------------------------");
+		System.out.println("Movie ID: " + movie.getMovieID());
+		System.out.println("Title: " + movie.getTitle());
+		System.out.println("Production Year: " + movie.getProductionYear());
+		System.out.println("Rating: " + movie.getRating());
+		System.out.println("---------------------------------------------------------------");
 	}
 
 	private static void topMovieInfo(int lower_year, int upper_year) {
 		List<Movie> top_movie = MovieCommunications.getTopMovieInfo(lower_year, upper_year);
-		System.out.println("----------------------------");
+		System.out.println("---------------------------------------------------------------");
 		for (int i = 0; i < top_movie.size(); i++) {
-			System.out.println("Movie ID: 			" + top_movie.get(i).getMovieID());
-			System.out.println("Title: 				" + top_movie.get(i).getTitle());
-			System.out.println("Production Year: 	" + top_movie.get(i).getProductionYear());
-			System.out.println("Rating:				" + top_movie.get(i).getRating());
-			System.out.println("----------------------------");
+			System.out.println("Movie ID: " + top_movie.get(i).getMovieID());
+			System.out.println("Title: " + top_movie.get(i).getTitle());
+			System.out.println("Production Year: " + top_movie.get(i).getProductionYear());
+			System.out.println("Rating: " + top_movie.get(i).getRating());
+			System.out.println("---------------------------------------------------------------");
 		}
 	}
 
 	private static void movieReviewInfo(int movie_id) {
 		List<MovieReview> movie_reviews = MovieCommunications.getMovieReview(movie_id);
-		System.out.println("----------------------------");
+		System.out.println("---------------------------------------------------------------");
 		for (int i = 0; i < movie_reviews.size(); i++) {
-			System.out.println("Review ID: 	" + movie_reviews.get(i).getMovieReviewID());
-			System.out.println("Movie ID: 	" + movie_reviews.get(i).getMovieID());
-			System.out.println("Author: 	" + movie_reviews.get(i).getAuthor());
-			System.out.println("Review: 	" + movie_reviews.get(i).getReview());
-			System.out.println("----------------------------");
+			System.out.println("Review ID: " + movie_reviews.get(i).getMovieReviewID());
+			System.out.println("Movie ID: " + movie_reviews.get(i).getMovieID());
+			System.out.println("Author: " + movie_reviews.get(i).getAuthor());
+			System.out.println("Review: " + movie_reviews.get(i).getReview());
+			System.out.println("---------------------------------------------------------------");
 		}
 
 	}

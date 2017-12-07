@@ -85,7 +85,6 @@ public class Trader {
 
 		while (control == 1) {
 			System.out.println("\nDeposit, Withdraw, Buy, and Sell are unavailable if the market is closed.");
-			MarketControl.setTodaysDate();
 			System.out.println("The market is " + MarketControl.isMarketOpenText());
 			System.out.println("Today is " + MarketControl.getMonth() + "/" + MarketControl.getDay() + "/"
 					+ MarketControl.getYear());
@@ -235,34 +234,34 @@ public class Trader {
 
 	private static void stockDisplay() {
 		List<Stocks> stocks = Communications.getStocks();
-		System.out.println("--------------------------------------------------------");
+		System.out.println("---------------------------------------------------------------");
 		for (int i = 0; i < stocks.size(); i++) {
 			System.out.println("Stock ID: " + stocks.get(i).getStockID());
 			System.out.println("Actor/Director Name: " + stocks.get(i).getADName());
 			System.out.println("Current Price: " + stocks.get(i).getCurrentPrice());
-			System.out.println("--------------------------------------------------------");
+			System.out.println("---------------------------------------------------------------");
 		}
 	}
 
 	private static void stockAccountDisplay() {
 		List<StockAccounts> stockAccounts = Communications.getStockAccounts(customer.getUsername());
-		System.out.println("--------------------------------------------------------");
+		System.out.println("---------------------------------------------------------------");
 		for (int i = 0; i < stockAccounts.size(); i++) {
 			System.out.println("Account ID:	" + stockAccounts.get(i).getAccountSID());
 			System.out.println("Stock ID:	" + stockAccounts.get(i).getStockID());
 			System.out.println("Buying Price:	" + stockAccounts.get(i).getBuyingPrice());
 			System.out.println("Stock Quantity:	" + stockAccounts.get(i).getBalance());
-			System.out.println("--------------------------------------------------------");
+			System.out.println("---------------------------------------------------------------");
 		}
 	}
 
 	private static void profileDisplay() {
 		List<ActorDirectorProfile> profile = Communications.getActorDirectorProfiles();
-		System.out.println("--------------------------------------------------------");
+		System.out.println("---------------------------------------------------------------");
 		for (int i = 0; i < profile.size(); i++) {
 			System.out.println("A/D ID:		" + profile.get(i).getADID());
 			System.out.println("Name:		" + profile.get(i).getADName());
-			System.out.println("--------------------------------------------------------");
+			System.out.println("---------------------------------------------------------------");
 		}
 	}
 
@@ -274,53 +273,34 @@ public class Trader {
 	private static void showTransactionHistory(String stock_id) {
 		List<Transaction> transactions = Communications.getTransactionsHistory(customer.getUsername(), stock_id);
 		int ttn;
-		System.out.println("--------------------------------------------------------");
+		System.out.println("---------------------------------------------------------------");
 		for (int i = 0; i < transactions.size(); i++) {
 			ttn = transactions.get(i).getTransactionTypeNumber();
+			System.out.println("Transaction ID: 		" + transactions.get(i).getTransID());
+			System.out.println("Username: 			" + transactions.get(i).getUsername());
+			System.out.println("Transaction Type: 		" + transactions.get(i).getTransactionType());
+			System.out.println("Date Of Transaction: 		" + transactions.get(i).getDateOfTransaction());
 			switch (ttn) {
 			case (1):
-				System.out.println("Transaction ID: 		" + transactions.get(i).getTransID());
-				System.out.println("Username: 			" + transactions.get(i).getUsername());
-				System.out.println("Transaction Type: 		" + transactions.get(i).getTransactionType());
 				System.out.println("Stock ID: 			" + transactions.get(i).getStockID());
 				System.out.println("Stock Quantity: 		" + transactions.get(i).getStockQuantity());
 				System.out.println("Buying Price: 			" + transactions.get(i).getBuyingPrice());
-				System.out.println("Date Of Transaction: 		" + transactions.get(i).getDateOfTransaction());
 				break;
 			case (2):
-				System.out.println("Transaction ID: 		" + transactions.get(i).getTransID());
-				System.out.println("Username: 			" + transactions.get(i).getUsername());
-				System.out.println("Transaction Type: 		" + transactions.get(i).getTransactionType());
 				System.out.println("Stock ID: 			" + transactions.get(i).getStockID());
 				System.out.println("Stock Quantity: 		" + transactions.get(i).getStockQuantity());
 				System.out.println("Selling Price: 			" + transactions.get(i).getSellingPrice());
-				System.out.println("Date Of Transaction: 		" + transactions.get(i).getDateOfTransaction());
 				break;
 			case (3):
-				System.out.println("Transaction ID: 		" + transactions.get(i).getTransID());
-				System.out.println("Username: 			" + transactions.get(i).getUsername());
-				System.out.println("Transaction Type: 		" + transactions.get(i).getTransactionType());
 				System.out.println("Withdraw: 			" + transactions.get(i).getWithdraw());
-				System.out.println("Date Of Transaction: 		" + transactions.get(i).getDateOfTransaction());
 				break;
 			case (4):
-				System.out.println("Transaction ID: 		" + transactions.get(i).getTransID());
-				System.out.println("Username: 			" + transactions.get(i).getUsername());
-				System.out.println("Transaction Type: 		" + transactions.get(i).getTransactionType());
 				System.out.println("Deposit: 			" + transactions.get(i).getDeposit());
-				System.out.println("Date Of Transaction: 		" + transactions.get(i).getDateOfTransaction());
 				break;
 			case (5):
-				System.out.println("Transaction ID: 		" + transactions.get(i).getTransID());
-				System.out.println("Username: 			" + transactions.get(i).getUsername());
-				System.out.println("Transaction Type: 		" + transactions.get(i).getTransactionType());
 				System.out.println("Accrue Interest: 		" + transactions.get(i).getAccrueInterest());
-				System.out.println("Date Of Transaction: 		" + transactions.get(i).getDateOfTransaction());
 				break;
 			default:
-				System.out.println("Transaction ID: 		" + transactions.get(i).getTransID());
-				System.out.println("Username: 			" + transactions.get(i).getUsername());
-				System.out.println("Transaction Type: 		" + transactions.get(i).getTransactionType());
 				System.out.println("Stock ID: 			" + transactions.get(i).getStockID());
 				System.out.println("Stock Quantity: 		" + transactions.get(i).getStockQuantity());
 				System.out.println("Buying Price: 			" + transactions.get(i).getBuyingPrice());
@@ -328,10 +308,9 @@ public class Trader {
 				System.out.println("Deposit: 			" + transactions.get(i).getDeposit());
 				System.out.println("Withdraw: 			" + transactions.get(i).getWithdraw());
 				System.out.println("Accrue Interest: 		" + transactions.get(i).getAccrueInterest());
-				System.out.println("Date Of Transaction: 		" + transactions.get(i).getDateOfTransaction());
 				break;
 			}
-			System.out.println("--------------------------------------------------------");
+			System.out.println("---------------------------------------------------------------");
 		}
 	}
 
@@ -339,11 +318,11 @@ public class Trader {
 		Stocks stock = Communications.getStock(ad_id);
 		System.out.println("Current Price: $" + stock.getCurrentPrice());
 		ActorDirectorProfile profile = Communications.getActorDirectorProfile(ad_id);
-		System.out.println("--------------------------------------------------------");
+		System.out.println("---------------------------------------------------------------");
 		System.out.println("Actor/Director: 	" + profile.getADName());
 		System.out.println("A/DO ID: 	" + profile.getADID());
 		System.out.println("DoB: 				" + profile.getDOB());
-		System.out.println("----------------------------");
+		System.out.println("---------------------------------------------------------------");
 		List<Contract> contracts = Communications.getContracts(profile.getADID());
 		for (int i = 0; i < contracts.size(); i++) {
 			System.out.println("Contract ID: 	" + contracts.get(i).getContractID());
@@ -351,7 +330,7 @@ public class Trader {
 			System.out.println("Role: 			" + contracts.get(i).getRole());
 			System.out.println("Year: 			" + contracts.get(i).getYear());
 			System.out.println("Total Payment: 	" + contracts.get(i).getTotalPayment());
-			System.out.println("--------------------------------------------------------");
+			System.out.println("---------------------------------------------------------------");
 		}
 	}
 

@@ -8,6 +8,9 @@ import java.util.Scanner;
 //if market account balance goes to 0 call error! (add constraint)
 //if stock account balance goes to 0 delete it (add constraint)
 //add foreign key constraints
+//report 
+//manager formatting
+//manager display usernames
 
 
 public class JDBCMySQL {
@@ -33,6 +36,7 @@ public class JDBCMySQL {
 			 */
 			int control = 1;
 			Scanner scanner = new Scanner(System.in);
+			MarketControl.setTodaysDate();
 
 			while (control == 1) {
 				System.out.println("\nCustomer (0)\n" + "Manager (1)\n" + "Debug (2)\n" + "Exit (3)\n");

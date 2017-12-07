@@ -14,7 +14,7 @@ public class MovieCommunications {
 		Statement statement = null;
 
 		Movie movie = null;
-		String query = "SELECT * FROM Movies WHERE id=" + id;
+		String query = "SELECT * FROM Movies WHERE id = " + id + ";";
 		try {
 			connection = JDBCMySQLConnection.getConnectionMOV();
 			statement = connection.createStatement();
@@ -41,6 +41,41 @@ public class MovieCommunications {
 		return movie;
 	}
 
+	public static List<Movie> getMovies() {
+		ResultSet rs = null;
+		Connection connection = null;
+		Statement statement = null;
+
+		List<Movie> movies = new ArrayList<Movie>();
+		Movie movie = null;
+		String query = "SELECT * FROM Movies;";
+		try {
+			connection = JDBCMySQLConnection.getConnectionMOV();
+			statement = connection.createStatement();
+			rs = statement.executeQuery(query);
+
+			while (rs.next()) {
+				movie = new Movie();
+				movie.setMovieID(rs.getInt("id"));
+				movie.setTitle(rs.getString("title"));
+				movie.setRating(rs.getInt("rating"));
+				movie.setProductionYear(rs.getString("production_year"));
+				movies.add(movie);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return movies;
+	}
+
 	public static List<Movie> getTopMovieInfo(int lower_year, int upper_year) {
 		ResultSet rs = null;
 		Connection connection = null;
@@ -49,7 +84,7 @@ public class MovieCommunications {
 		List<Movie> movies = new ArrayList<Movie>();
 		Movie movie = null;
 		String query = "SELECT * FROM Movies WHERE production_year > " + lower_year + " AND production_year < "
-				+ upper_year;
+				+ upper_year + ";";
 		try {
 			connection = JDBCMySQLConnection.getConnectionMOV();
 			statement = connection.createStatement();
@@ -84,7 +119,7 @@ public class MovieCommunications {
 
 		List<MovieReview> movie_reviews = new ArrayList<MovieReview>();
 		MovieReview movie_review = null;
-		String query = "SELECT * FROM Reviews WHERE movie_id=" + movie_id;
+		String query = "SELECT * FROM Reviews WHERE movie_id = " + movie_id + ";";
 		try {
 			connection = JDBCMySQLConnection.getConnectionMOV();
 			statement = connection.createStatement();

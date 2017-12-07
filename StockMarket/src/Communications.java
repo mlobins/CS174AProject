@@ -15,10 +15,10 @@ public class Communications {
 		Connection connection = null;
 		Statement statement = null;
 		try {
+			System.out.printf("%s\n", query);
 			connection = JDBCMySQLConnection.getConnection();
 			statement = connection.createStatement();
 			statement.execute(query);
-			System.out.printf("%s\n", query);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -771,7 +771,7 @@ public class Communications {
 	public static void insertTransactionAccrueInterest(int transaction_type, String username, double accrue_interest) {
 		String query = "INSERT INTO Transactions ( username, transaction_type, accrue_interest, dateOfTransaction) VALUES ( '"
 				+ username + "', '" + transaction_type + "' , '" + accrue_interest + "', '"
-				+ MarketControl.getTodaysDate() + ");";
+				+ MarketControl.getTodaysDate() + "');";
 		System.out.println(query);
 		runQuery(query);
 
