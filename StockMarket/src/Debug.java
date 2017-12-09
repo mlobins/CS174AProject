@@ -44,21 +44,21 @@ public class Debug {
 
 	// YYYY/MM/dd
 	public static void openMarket() {
-
+/*
 		try {
 			MarketControl.initializeDate();
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+*/
 		// Communications.createDate(); // need to move to all creates location
 		MarketControl.isMarketOpen = true;
 		System.out.println("Market is open.");
 		String updatedDate = Communications.getDateString();
 		System.out.printf("%s%n", updatedDate);
 		MarketControl.setTodaysDate(updatedDate);
-		System.out.printf("updated date = %s", updatedDate);
+		System.out.printf("Updated date = %s\n", updatedDate);
 		// start day
 	}
 

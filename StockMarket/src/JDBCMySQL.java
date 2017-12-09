@@ -4,14 +4,9 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 //toDo
-//sql math buy/sell/accrue_interest
-//if market account balance goes to 0 call error! (add constraint)
 //if stock account balance goes to 0 delete it (add constraint)
 //add foreign key constraints
 //report 
-//manager formatting
-//manager display usernames
-
 
 public class JDBCMySQL {
 	public static void main(String[] args) {

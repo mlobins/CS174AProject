@@ -7,8 +7,8 @@ public class Trader {
 	private static CustomerProfile customer = null;
 	static int buyType = 1;
 	static int sellType = 2;
-	static int depositType = 3;
-	static int withdrawType = 4;
+	static int withdrawType = 3;
+	static int depositType = 4;
 	static int accrue_interestType = 5;
 
 	public static void traderInit() {
@@ -16,7 +16,7 @@ public class Trader {
 		Scanner scanner = new Scanner(System.in);
 
 		while (control == 1) {
-			System.out.println("\nRegister (0)\n" + "Login? (1)\n" + "Exit(2)\n");
+			System.out.println("\nRegister (0)\n" + "Login (1)\n" + "Exit(2)\n");
 			int choice = scanner.nextInt();
 			switch (choice) {
 			case 0:
@@ -185,7 +185,7 @@ public class Trader {
 		double change = marketAccount.getBalance() + deposit;
 		Communications.updateMarketAccount(marketAccount.getUsername(), change);
 		if (buySell == false) {
-			Communications.insertTransactionDeposit(depositType, change, customer.getUsername());
+			Communications.insertTransactionDeposit(depositType, deposit, customer.getUsername());
 		}
 	}
 
@@ -197,7 +197,7 @@ public class Trader {
 		} else {
 			Communications.updateMarketAccount(marketAccount.getUsername(), change);
 			if (buySell == false) {
-				Communications.insertTransactionWithdraw(withdrawType, change, customer.getUsername());
+				Communications.insertTransactionWithdraw(withdrawType, withdraw, customer.getUsername());
 			}
 			return true;
 		}
@@ -216,14 +216,14 @@ public class Trader {
 		StockAccounts stockAccount = Communications.getStockAccount(account_sid);
 		Stocks stock = Communications.getStock(stockAccount.getStockID());
 		double price = stock.getCurrentPrice() * stockQuantity - 20;
-		double balance = stockAccount.getBalance() - stockQuantity;
-		if (balance < 0) {
+		double newBalance = stockAccount.getBalance() - stockQuantity;
+		if (newBalance < 0) {
 			return false;
 		} else {
-			Communications.updateStockAccountSell(account_sid, stock.getCurrentPrice(), balance);
+			Communications.updateStockAccountSell(account_sid, stock.getCurrentPrice(), newBalance);
 			Communications.insertTransactionSell(sellType, stock.getCurrentPrice(), stockQuantity,
 					customer.getUsername(), stockAccount.getStockID());
-			if (balance == 0) {
+			if (newBalance == 0) {
 				// delete
 			}
 			deposit(price, true);

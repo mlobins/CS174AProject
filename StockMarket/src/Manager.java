@@ -142,20 +142,78 @@ public class Manager {
 				}
 			}
 		}
+		CustomerProfile customer = new CustomerProfile();
+		customer = Communications.getCustomerProfile(username);
+		System.out.printf("%n%nName: %s %nE-mail Address: %s %n%n", customer.getName(), customer.getEmailAddress());
+		
+		List<Transaction> transactions1 = new ArrayList<Transaction>();
+		Transaction transaction1 = null;
+		String query1 = "SELECT  SUM(t.withdraw) AS withdrawal,  SUM(t.buying_price * t.stock_quantity + 20.00) AS loss, "
+				+ "SUM(t.selling_price * t.stock_quantity - 20) AS sales,  SUM(t.deposit) AS deposits ,  SUM(t.accrue_interest) AS interest"+ " FROM Transactions t" + " WHERE " + "username = '" + username + "';";
+		System.out.println(query1);
+		
+		try {
+			connection = JDBCMySQLConnection.getConnection();
+			statement = connection.createStatement();
+			rs = statement.executeQuery(query1);
+			while (rs.next()) {
+				transaction1 = new Transaction();
+				transaction1.setBuyingPrice(rs.getDouble("loss"));
+				transaction1.setSellingPrice(rs.getDouble("sales"));
+				transaction1.setDeposit(rs.getDouble("deposits")); 
+				transaction1.setAccrueInterest(rs.getDouble("interest"));
+				transaction1.setWithdraw(rs.getDouble("withdrawal"));
+				transactions1.add(transaction1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		
+		MarketAccounts marketAccounts = new MarketAccounts();
+		marketAccounts = Communications.getMarketAccount(username);
+		double endOfMonthBalance = marketAccounts.getBalance();
+		/*System.out.printf("sales = %f%n", transaction1.getSellingPrice());
+		System.out.printf("deposits = %f%n", transaction1.getDeposit());
+		System.out.printf("interest = %f%n", transaction1.getAccrueInterest());
+		*/
+		double initialbalancedifference = transaction1.getSellingPrice() + transaction1.getDeposit() + transaction1.getAccrueInterest() - transaction1.getBuyingPrice() - transaction1.getWithdraw();
+		double differenceNetProfit = transaction1.getSellingPrice() + transaction1.getAccrueInterest() - transaction1.getBuyingPrice() ;
 
+
+		
+		System.out.printf("Initial balance :  $%f%n",(endOfMonthBalance - initialbalancedifference));
+		System.out.printf("Total deposits:    $%f%n",  transaction1.getDeposit());
+		System.out.printf("Total withdrawals: $%f%n",  transaction1.getWithdraw());
+		System.out.printf("Total earnings:    $%f%n" , transaction1.getSellingPrice() + transaction1.getAccrueInterest());
+		System.out.printf("Total losses:      $%f%n", transaction1.getBuyingPrice());
+		System.out.printf("Net Profit:        %f%n", differenceNetProfit);
+		System.out.printf("Current Balance:   $%f%n",  marketAccounts.getBalance());
+		
+		
 		System.out.println("---------------------------------------------------------------");
 		for (int i = 0; i < transactions.size(); i++) {
 			System.out.println("Trans ID:            " + transactions.get(i).getTransID());
 			System.out.println("username:            " + transactions.get(i).getUsername());
 			System.out.println("Transactiontype:     " + transactions.get(i).getTransactionType());
-			System.out.println("Stock ID :           " + transactions.get(i).getStockID());
-			System.out.println("Stock Quantity:      " + transactions.get(i).getStockQuantity());
 			switch (transactions.get(i).getTransactionTypeNumber()) {
 			case 1:
 				System.out.println("Buying Price:        " + transactions.get(i).getBuyingPrice());
+				System.out.println("Stock ID :           " + transactions.get(i).getStockID());
+				System.out.println("Stock Quantity:      " + transactions.get(i).getStockQuantity());
 				break;
 			case 2:
 				System.out.println("Selling Price:       " + transactions.get(i).getSellingPrice());
+				System.out.println("Stock ID :           " + transactions.get(i).getStockID());
+				System.out.println("Stock Quantity:      " + transactions.get(i).getStockQuantity());
 				break;
 			case 3:
 				System.out.println("WithDraw:            " + transactions.get(i).getWithdraw());
@@ -174,7 +232,11 @@ public class Manager {
 
 			System.out.println("---------------------------------------------------------------");
 		}
-	}
+		
+		
+		
+		
+	}  
 
 	public static void generateActiveCustomers() {
 		ResultSet rs = null;
@@ -231,7 +293,7 @@ public class Manager {
 		String query = "SELECT c.username, c.name, c.state,  (SUM(t.selling_price) + SUM(t.accrue_interest)) AS total_amount"
 				+ " FROM CustomerProfile c INNER JOIN Transactions t " + " ON c.username = t.username "
 				+ " GROUP BY c.username, c.name "
-				+ " HAVING (SUM(t.selling_price) + SUM(t.accrue_interest) >= 10000); ";
+				+ " HAVING (SUM(t.selling_price * t.stock_quantity - 20) + SUM(t.accrue_interest) >= 10000); ";
 		try {
 			connection = JDBCMySQLConnection.getConnection();
 			statement = connection.createStatement();
