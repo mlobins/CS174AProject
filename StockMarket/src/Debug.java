@@ -9,8 +9,9 @@ public class Debug {
 		Scanner scanner = new Scanner(System.in);
 
 		while (control == 1) {
-			System.out.println("\nOpen Market (0)\n" + "Close Market (1)\n" + "Set Price (2)\n" + "Exit (3)\n"
-					+ "Initiate Tables (4)\n" + "Initiate Stocks (5)\n");
+			System.out.println("\nOpen Market (0)\n" + "Close Market (1)\n" + "Set Price (2)\n" + "Exit (3)\n");
+			//System.out.println("\nOpen Market (0)\n" + "Close Market (1)\n" + "Set Price (2)\n" + "Exit (3)\n"
+			//		+ "Initiate Tables (4)\n" + "Initiate Stocks (5)\n");
 			int choice = scanner.nextInt();
 			switch (choice) {
 			case 0:

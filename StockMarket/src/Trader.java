@@ -66,12 +66,15 @@ public class Trader {
 	}
 
 	private static int login() {
-		System.out.println("Enter your username: ");
 		Scanner scanner = new Scanner(System.in);
+		System.out.println("Enter your username: ");
 		String username = scanner.nextLine();
 		customer = Communications.getCustomerProfile(username);
-		System.out.println("Your username is " + username);
-		if (username == customer.getUsername()) {// && password == customer.getPassword()) {
+		//System.out.println("Your username is " + username);
+		System.out.println("Enter your password: ");
+		scanner.nextLine();
+		String password = scanner.nextLine();
+		if (username == customer.getUsername() && password == customer.getPassword()) {// && password == customer.getPassword()) {
 			return 1;
 		} else
 			return 0;

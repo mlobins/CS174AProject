@@ -43,8 +43,8 @@ public class Communications {
 
 	public static void createMarketAccounts() {
 
-		String query = "CREATE TABLE MarketAccounts " + "( username VARCHAR(25) NOT NULL, " + "balance DOUBLE(20, 2), "
-				+ "account_mid INTEGER AUTO_INCREMENT, " + "averageDailyBalance INTEGER, "
+		String query = "CREATE TABLE MarketAccounts " + "( username VARCHAR(25) NOT NULL, " + "balance DOUBLE(11, 2), "
+				+ "account_mid INTEGER AUTO_INCREMENT, " + "averageDailyBalance DOUBLE(11, 2), "
 				+ "PRIMARY KEY (account_mid) " + ", FOREIGN KEY (username) REFERENCES CustomerProfile (username)"
 				+ ");";
 		System.out.printf("%s%n", query);
@@ -53,7 +53,7 @@ public class Communications {
 
 	public static void createStockAccounts() {
 		String query = "CREATE TABLE StockAccounts " + "( account_sid INTEGER AUTO_INCREMENT, " + "stock_id CHAR(3), "
-				+ "balance DOUBLE(6,3), " + "buying_price INTEGER, " + "selling_price INTEGER, "
+				+ "balance DOUBLE(6,3), " + "buying_price DOUBLE(6,2), " + "selling_price DOUBLE(6,2), "
 				+ "username VARCHAR(25), " + "PRIMARY KEY (account_sid), " +
 				// "FOREIGN KEY (stock_id) REFERENCES Stocks (stock_id)"
 				"FOREIGN KEY (username) REFERENCES CustomerProfile (username)) ;";
@@ -88,9 +88,9 @@ public class Communications {
 	public static void createTransactions() {
 		String query = "Create Table Transactions "
 				+ "( transid INTEGER AUTO_INCREMENT, username VARCHAR(25), transaction_type INTEGER, "
-				+ "stock_id CHAR(3), " + "stock_quantity DOUBLE(6,3), " + "buying_price DOUBLE(6,2), "
-				+ "selling_price DOUBLE (6,2), " + "deposit DOUBLE (6,2), " + "withdraw DOUBLE (6,2), "
-				+ "accrue_interest DOUBLE (6,2), " + "dateOfTransaction DATE, " + "PRIMARY KEY (transid) " + ");";
+				+ "stock_id CHAR(3), " + "stock_quantity DOUBLE(6,3), " + "buying_price DOUBLE(11,2), "
+				+ "selling_price DOUBLE (11,2), " + "deposit DOUBLE (11,2), " + "withdraw DOUBLE (11,2), "
+				+ "accrue_interest DOUBLE (11,2), " + "dateOfTransaction DATE, " + "PRIMARY KEY (transid) " + ");";
 		System.out.printf("%s", query);
 		runQuery(query);
 	}
