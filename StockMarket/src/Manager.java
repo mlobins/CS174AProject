@@ -9,6 +9,46 @@ import java.util.Scanner;
 
 public class Manager {
 	// manager interface
+	
+
+	public static void managerInit() {
+		int control = 1;
+		Scanner scanner = new Scanner(System.in);
+
+		while (control == 1) {
+			System.out.println("\nLogin (1)\n" + "Exit(2)\n");
+			int choice = scanner.nextInt();
+			switch (choice) {
+			case 1:
+				control = login();
+				manager();
+				break;
+			case 2:
+				control = 0;
+				break;
+			default:
+				System.out.println("Invalid Choice: ");
+				break;
+			}
+		}
+	}
+	
+
+	private static int login() {
+		Scanner scanner = new Scanner(System.in);
+		System.out.println("Enter your username: ");
+		String username = scanner.nextLine();
+		CustomerProfile customer = Communications.getCustomerProfile(username);
+		//System.out.println("Your username is " + username);
+		System.out.println("Enter your password: ");
+		String password = scanner.nextLine();
+		if (username.equals("John Admin") && password.equals("admin")) {
+			return 1;
+		} else
+			return 0;
+	}
+	
+	
 	public static void manager() {
 		int control = 1;
 		Scanner scanner = new Scanner(System.in);
@@ -293,7 +333,8 @@ public class Manager {
 		String query = "SELECT c.username, c.name, c.state,  (SUM(t.selling_price) + SUM(t.accrue_interest)) AS total_amount"
 				+ " FROM CustomerProfile c INNER JOIN Transactions t " + " ON c.username = t.username "
 				+ " GROUP BY c.username, c.name "
-				+ " HAVING (SUM(t.selling_price * t.stock_quantity - 20) + SUM(t.accrue_interest) >= 10000); ";
+				//+ " HAVING (SUM(t.selling_price * t.stock_quantity - 20) + SUM(t.accrue_interest) >= 10000); "; //ORIGINAL LINE AT TURN-IN
+		+ " HAVING (SUM(t.selling_price * t.stock_quantity - 20)  - SUM( t.buying_price * t.stock_quantity + 20) + SUM(t.accrue_interest) >= 10000); "; //ADDED AFTER TURN-IN
 		try {
 			connection = JDBCMySQLConnection.getConnection();
 			statement = connection.createStatement();

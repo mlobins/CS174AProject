@@ -22,6 +22,7 @@ public class Debug {
 				break;
 			case 2:
 				System.out.println("What stock do you want to change?: ");
+				scanner.nextLine();
 				String stock_id = scanner.nextLine();
 				System.out.println("Enter the new price of the stock: ");
 				double price = scanner.nextDouble();

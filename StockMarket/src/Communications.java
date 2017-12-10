@@ -32,9 +32,11 @@ public class Communications {
 		}
 	}
 
+	//ADDED address and ssn AFTER TURN-IN
 	public static void createCustomerProfile() {
 		String query = "CREATE TABLE CustomerProfile " + "( username VARCHAR(25) NOT NULL PRIMARY KEY, "
-				+ "name VARCHAR(25) NOT NULL, " + "state VARCHAR(2) NOT NULL, " + "phone_number VARCHAR(10) NOT NULL, "
+				+ "name VARCHAR(25) NOT NULL, " + "state VARCHAR(2) NOT NULL, "
+				+ "phone_number VARCHAR(12) NOT NULL, address VARCHAR(25) NOT NULL, SSN VARCHAR(12), "
 				+ "email_address VARCHAR(25) NOT NULL, " + "taxid VARCHAR(25) NOT NULL, "
 				+ "password VARCHAR(25) NOT NULL " + ") ;";
 		System.out.printf("%s", query);
@@ -79,9 +81,8 @@ public class Communications {
 
 	public static void createContract() {
 		String query = "CREATE TABLE Contract" + "( contract_id INTEGER AUTO_INCREMENT, " + "movie_title CHAR(255), "
-				+ "ad_id INTEGER, " + "role CHAR(255), " + "year INTEGER, "
-				+ "total_payment DOUBLE(6,3), " + "PRIMARY KEY(contract_id),"
-				+ " FOREIGN KEY (ad_id) REFERENCES ActorDirectorProfile (ad_id)" + ");";
+				+ "ad_id INTEGER, " + "role CHAR(255), " + "year INTEGER, " + "total_payment DOUBLE(6,3), "
+				+ "PRIMARY KEY(contract_id)," + " FOREIGN KEY (ad_id) REFERENCES ActorDirectorProfile (ad_id)" + ");";
 		runQuery(query);
 	}
 
@@ -147,12 +148,13 @@ public class Communications {
 		runQuery(query);
 	}
 
+	//ADDED address and ssn AFTER TURN-IN
 	public static void setCustomerProfile(String username, String name, String state, String phone_number,
-			String email_address, String taxid, String password) {
-		String query = "INSERT INTO CustomerProfile (username, name, state, phone_number, email_address, taxid, password)"
+			String address, String ssn, String email_address, String taxid, String password) {
+		String query = "INSERT INTO CustomerProfile (username, name, state, phone_number, address, ssn, email_address, taxid, password)"
 				+ " VALUES (" + "\"" + username + "\"" + "," + "\"" + name + "\"" + "," + "\"" + state + "\"" + ","
-				+ "\"" + phone_number + "\"" + "," + "\"" + email_address + "\"" + "," + "\"" + taxid + "\"" + ","
-				+ "\"" + password + "\"" + ");";
+				+ "\"" + phone_number + "\"" + "," + "\"" + address + "\"" + "," + "\"" + ssn + "\"" + "," + "\""
+				+ email_address + "\"" + "," + "\"" + taxid + "\"" + "," + "\"" + password + "\"" + ");";
 		runQuery(query);
 	}
 
@@ -171,9 +173,9 @@ public class Communications {
 	}
 
 	public static void setStocks(int ad_id, String stock_id, int closing_price, int current_price) {
-		String query = "INSERT INTO Stocks (ad_id, stock_id, closing_price, current_price) " + "VALUES (" + "\""
-				+ ad_id + "\"" + "," + "\"" + stock_id + "\"" + "," + "\"" + closing_price
-				+ "\"" + "," + "\"" + current_price + "\"" + ");";
+		String query = "INSERT INTO Stocks (ad_id, stock_id, closing_price, current_price) " + "VALUES (" + "\"" + ad_id
+				+ "\"" + "," + "\"" + stock_id + "\"" + "," + "\"" + closing_price + "\"" + "," + "\"" + current_price
+				+ "\"" + ");";
 		runQuery(query);
 	}
 
@@ -183,11 +185,10 @@ public class Communications {
 		runQuery(query);
 	}
 
-	public static void setContract(int ad_id, String movie_title, String role, int year,
-			int total_payment) {
-		String query = "INSERT INTO Contract (ad_id, movie_title, role, year, total_payment) " + "VALUES ("
-				+ "\"" + ad_id + "\"" + "," + "\"" + movie_title + "\"" + "," + "\""
-				+ role + "\"" + "," + "\"" + year + "\"" + "," + "\"" + total_payment + "\"" + ");";
+	public static void setContract(int ad_id, String movie_title, String role, int year, int total_payment) {
+		String query = "INSERT INTO Contract (ad_id, movie_title, role, year, total_payment) " + "VALUES (" + "\""
+				+ ad_id + "\"" + "," + "\"" + movie_title + "\"" + "," + "\"" + role + "\"" + "," + "\"" + year + "\""
+				+ "," + "\"" + total_payment + "\"" + ");";
 		runQuery(query);
 	}
 
@@ -197,12 +198,13 @@ public class Communications {
 		String query = "INSERT INTO Transactions (transID, username, transaction_type, "
 				+ "stock_id, stock_quantity, buying_price, selling_price, deposit, withdraw, accrue_interest, dateOfTransaction)"
 				+ "VALUES (" + "\"" + transID + "\"" + "," + "\"" + username + "\"" + "," + "\"" + transaction_type
-				+ "\"" + "," + "\"" + stock_id + "," + "\"" + stock_quantity + "\"" + "," + "\"" + buying_price
-				+ "\"" + "," + "\"" + selling_price + "\"" + "," + "\"" + deposit + "\"" + "," + "\"" + withdraw + "\""
-				+ "," + "\"" + accrue_interest + "\"" + "," + "\"" + date + "\"" + ");";
+				+ "\"" + "," + "\"" + stock_id + "," + "\"" + stock_quantity + "\"" + "," + "\"" + buying_price + "\""
+				+ "," + "\"" + selling_price + "\"" + "," + "\"" + deposit + "\"" + "," + "\"" + withdraw + "\"" + ","
+				+ "\"" + accrue_interest + "\"" + "," + "\"" + date + "\"" + ");";
 		runQuery(query);
 	}
 
+	//ADDED address and ssn AFTER TURN-IN
 	public static CustomerProfile getCustomerProfile(String username) {
 		ResultSet rs = null;
 		Connection connection = null;
@@ -220,6 +222,8 @@ public class Communications {
 				customer.setName(rs.getString("name"));
 				customer.setState(rs.getString("state"));
 				customer.setPhoneNumber(rs.getString("phone_number"));
+				customer.setAddress(rs.getString("address"));
+				customer.setSSN(rs.getString("ssn"));
 				customer.setEmailAddress(rs.getString("email_address"));
 				customer.setTaxID((rs.getString("taxid")));
 				customer.setUsername((rs.getString("username")));
@@ -254,7 +258,8 @@ public class Communications {
 			if (rs.next()) {
 				market_account = new MarketAccounts();
 				market_account.setAccountMID(rs.getInt("account_mid"));
-				market_account.setBalance(rs.getInt("balance"));
+				// market_account.setBalance(rs.getInt("balance")); //ORIGINAL LINE AT TURN-IN
+				market_account.setBalance(rs.getDouble("balance")); // ADDED AFTER TURN-IN
 				market_account.setUsername(rs.getString("username"));
 				market_account.setAverageDailyBalance(rs.getDouble("averageDailyBalance"));
 			}
@@ -288,7 +293,8 @@ public class Communications {
 				stock_account = new StockAccounts();
 				stock_account.setAccountSID(rs.getInt("account_sid"));
 				stock_account.setStockID(rs.getString("stock_id"));
-				stock_account.setBalance(rs.getInt("balance"));
+				// stock_account.setBalance(rs.getInt("balance")); //ORIGINAL LINE AT TURN-IN
+				stock_account.setBalance(rs.getDouble("balance")); // ADDED AFTER TURN-IN
 				stock_account.setBuyingPrice(rs.getInt("buying_price"));
 				stock_account.setSellingPrice((rs.getInt("selling_price")));
 				stock_account.setUsername((rs.getString("username")));
@@ -323,7 +329,8 @@ public class Communications {
 				stock_account = new StockAccounts();
 				stock_account.setAccountSID(rs.getInt("account_sid"));
 				stock_account.setStockID(rs.getString("stock_id"));
-				stock_account.setBalance(rs.getInt("balance"));
+				// stock_account.setBalance(rs.getInt("balance")); //ORIGINAL LINE AT TURN-IN
+				stock_account.setBalance(rs.getDouble("balance")); // ADDED AFTER TURN-IN
 				stock_account.setBuyingPrice(rs.getInt("buying_price"));
 				stock_account.setSellingPrice((rs.getInt("selling_price")));
 				stock_account.setUsername((rs.getString("username")));
@@ -349,7 +356,8 @@ public class Communications {
 		Statement statement = null;
 		List<StockAccounts> stock_accounts = new ArrayList<StockAccounts>();
 		StockAccounts stock_account = null;
-		String query = "SELECT * FROM StockAccounts WHERE username = " + "\"" + username + "\"" + "AND balance > " + "0" + ";";
+		String query = "SELECT * FROM StockAccounts WHERE username = " + "\"" + username + "\"" + "AND balance > " + "0"
+				+ ";";
 		try {
 			connection = JDBCMySQLConnection.getConnection();
 			statement = connection.createStatement();
@@ -359,7 +367,8 @@ public class Communications {
 				stock_account = new StockAccounts();
 				stock_account.setAccountSID(rs.getInt("account_sid"));
 				stock_account.setStockID(rs.getString("stock_id"));
-				stock_account.setBalance(rs.getInt("balance"));
+				// stock_account.setBalance(rs.getInt("balance")); //ORIGINAL LINE AT TURN-IN
+				stock_account.setBalance(rs.getDouble("balance")); // ADDED AFTER TURN-IN
 				stock_account.setBuyingPrice(rs.getInt("buying_price"));
 				stock_account.setSellingPrice((rs.getInt("selling_price")));
 				stock_account.setUsername((rs.getString("username")));
@@ -496,7 +505,7 @@ public class Communications {
 				actor_director = new ActorDirectorProfile();
 				actor_director.setADID(rs.getInt("ad_id"));
 				actor_director.setADName(rs.getString("ad_name"));
-				actor_director.setDOB(rs.getInt("dob"));
+				actor_director.setDOB(rs.getString("dob"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -529,7 +538,7 @@ public class Communications {
 				actor_director = new ActorDirectorProfile();
 				actor_director.setADID(rs.getInt("ad_id"));
 				actor_director.setADName(rs.getString("ad_name"));
-				actor_director.setDOB(rs.getInt("dob"));
+				actor_director.setDOB(rs.getString("dob"));
 				actor_directors.add(actor_director);
 			}
 		} catch (SQLException e) {

@@ -30,7 +30,7 @@ public class JDBCMySQL {
 			 */
 			int control = 1;
 			Scanner scanner = new Scanner(System.in);
-			MarketControl.setTodaysDate();
+			//MarketControl.setTodaysDate();
 
 			while (control == 1) {
 				System.out.println("\nCustomer (0)\n" + "Manager (1)\n" + "Debug (2)\n" + "Exit (3)\n");
@@ -40,7 +40,7 @@ public class JDBCMySQL {
 					Trader.traderInit();
 					break;
 				case (1):
-					Manager.manager();
+					Manager.managerInit();
 					break;
 				case (2):
 					Debug.debugInit();

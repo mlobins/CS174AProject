@@ -36,6 +36,7 @@ public class Trader {
 		}
 	}
 
+	//ADDED address and ssn AFTER TURN-IN
 	private static void register() {
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("Enter your username: ");
@@ -50,6 +51,12 @@ public class Trader {
 		System.out.println("Enter your phone_number: ");
 		String phone_number = scanner.nextLine();
 
+		System.out.println("Enter your address: ");
+		String address = scanner.nextLine();
+
+		System.out.println("Enter your SSN: ");
+		String ssn = scanner.nextLine();
+
 		System.out.println("Enter your email_address: ");
 		String email_address = scanner.nextLine();
 
@@ -58,7 +65,7 @@ public class Trader {
 
 		System.out.println("Enter your password: ");
 		String password = scanner.nextLine();
-		Communications.setCustomerProfile(username, name, state, phone_number, email_address, taxid, password);
+		Communications.setCustomerProfile(username, name, state, phone_number, address, ssn, email_address, taxid, password);
 		customer = Communications.getCustomerProfile(username);
 		Communications.setMarketAccount(0, username);
 		deposit(1000, false);
@@ -72,14 +79,11 @@ public class Trader {
 		customer = Communications.getCustomerProfile(username);
 		//System.out.println("Your username is " + username);
 		System.out.println("Enter your password: ");
-		scanner.nextLine();
 		String password = scanner.nextLine();
-		if (username == customer.getUsername() && password == customer.getPassword()) {// && password == customer.getPassword()) {
+		if (username.equals(customer.getUsername()) && password.equals(customer.getPassword())) {// && password == customer.getPassword()) {
 			return 1;
 		} else
 			return 0;
-		// add password functionality
-		// any username can be inputted check!
 	}
 
 	public static void trader() {
@@ -231,6 +235,7 @@ public class Trader {
 				Communications.insertTransactionSell(sellType, stock.getCurrentPrice(), stockQuantity,
 						customer.getUsername(), stockAccount.getStockID());
 				deposit(price, true);
+				//return true;  //ADDED AFTER TURN-IN
 			}
 			return false;
 		}

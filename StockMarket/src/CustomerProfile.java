@@ -8,6 +8,28 @@ public class CustomerProfile {
 	private String taxid;
 	private String username;
 	private String password;
+	private String address; //ADDED AFTER TURN-IN
+	private String ssn; //ADDED AFTER TURN-IN
+ 
+	//ADDED AFTER TURN-IN
+	public String getAddress() {
+		return address;
+	}
+	
+	//ADDED AFTER TURN-IN
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	
+	//ADDED AFTER TURN-IN
+	public String getSSN() {
+		return ssn;
+	}
+	
+	//ADDED AFTER TURN-IN
+	public void setSSN(String ssn) {
+		this.ssn = ssn;
+	}
 	
 	public String getName() {
 		return name;

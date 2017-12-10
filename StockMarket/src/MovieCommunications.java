@@ -84,7 +84,7 @@ public class MovieCommunications {
 		List<Movie> movies = new ArrayList<Movie>();
 		Movie movie = null;
 		String query = "SELECT * FROM Movies WHERE production_year > " + lower_year + " AND production_year < "
-				+ upper_year + ";";
+				+ upper_year + " AND rating = '5.0';";
 		try {
 			connection = JDBCMySQLConnection.getConnectionMOV();
 			statement = connection.createStatement();

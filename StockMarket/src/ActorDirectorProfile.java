@@ -4,7 +4,7 @@ public class ActorDirectorProfile {
 	
 	private int ad_id;
 	private String ad_name;
-	private int dob;
+	private String dob;
 	
 	public int getADID() {
 		return ad_id;
@@ -22,11 +22,11 @@ public class ActorDirectorProfile {
 		this.ad_name = ad_name;
 	}
 	
-	public int getDOB() {
+	public String getDOB() {
 		return dob;
 	}
 	
-	public void setDOB(int dob) {
+	public void setDOB(String dob) {
 		this.dob = dob;
 	}
 	
