@@ -4,8 +4,9 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 //toDo
-//if stock account balance goes to 0 delete it (add constraint)
+//check buy and sell accounts for 0! do not update transactions!
 //add foreign key constraints
+//reset increments
 //report 
 
 public class JDBCMySQL {

@@ -343,6 +343,42 @@ public class Communications {
 		return stock_accounts;
 	}
 
+	public static List<StockAccounts> getStockAccountsForSell(String username) {
+		ResultSet rs = null;
+		Connection connection = null;
+		Statement statement = null;
+		List<StockAccounts> stock_accounts = new ArrayList<StockAccounts>();
+		StockAccounts stock_account = null;
+		String query = "SELECT * FROM StockAccounts WHERE username = " + "\"" + username + "\"" + "AND balance > " + "0" + ";";
+		try {
+			connection = JDBCMySQLConnection.getConnection();
+			statement = connection.createStatement();
+			rs = statement.executeQuery(query);
+
+			while (rs.next()) {
+				stock_account = new StockAccounts();
+				stock_account.setAccountSID(rs.getInt("account_sid"));
+				stock_account.setStockID(rs.getString("stock_id"));
+				stock_account.setBalance(rs.getInt("balance"));
+				stock_account.setBuyingPrice(rs.getInt("buying_price"));
+				stock_account.setSellingPrice((rs.getInt("selling_price")));
+				stock_account.setUsername((rs.getString("username")));
+				stock_accounts.add(stock_account);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return stock_accounts;
+	}
+
 	public static Stocks getStock(String stock_id) {
 		ResultSet rs = null;
 		Connection connection = null;

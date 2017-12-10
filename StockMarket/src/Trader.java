@@ -206,10 +206,13 @@ public class Trader {
 	private static boolean buy(String stock_id, double stockQuantity) {
 		Stocks stock = Communications.getStock(stock_id);
 		double price = stock.getCurrentPrice() * stockQuantity + 20;
-		Communications.setStockAccount(stock_id, stockQuantity, stock.getCurrentPrice(), 0, customer.getUsername());
-		Communications.insertTransactionBuy(buyType, stock.getCurrentPrice(), stockQuantity, customer.getUsername(),
-				stock_id);
-		return withdraw(price, true);
+		if (stockQuantity > 0) {
+			Communications.setStockAccount(stock_id, stockQuantity, stock.getCurrentPrice(), 0, customer.getUsername());
+			Communications.insertTransactionBuy(buyType, stock.getCurrentPrice(), stockQuantity, customer.getUsername(),
+					stock_id);
+			return withdraw(price, true);
+		} else
+			return false;
 	}
 
 	private static boolean sell(int account_sid, double stockQuantity) {
@@ -220,14 +223,13 @@ public class Trader {
 		if (newBalance < 0) {
 			return false;
 		} else {
-			Communications.updateStockAccountSell(account_sid, stock.getCurrentPrice(), newBalance);
-			Communications.insertTransactionSell(sellType, stock.getCurrentPrice(), stockQuantity,
-					customer.getUsername(), stockAccount.getStockID());
-			if (newBalance == 0) {
-				// delete
+			if (stockQuantity > 0) {
+				Communications.updateStockAccountSell(account_sid, stock.getCurrentPrice(), newBalance);
+				Communications.insertTransactionSell(sellType, stock.getCurrentPrice(), stockQuantity,
+						customer.getUsername(), stockAccount.getStockID());
+				deposit(price, true);
 			}
-			deposit(price, true);
-			return true;
+			return false;
 		}
 
 	}
@@ -244,7 +246,7 @@ public class Trader {
 	}
 
 	private static void stockAccountDisplay() {
-		List<StockAccounts> stockAccounts = Communications.getStockAccounts(customer.getUsername());
+		List<StockAccounts> stockAccounts = Communications.getStockAccountsForSell(customer.getUsername());
 		System.out.println("---------------------------------------------------------------");
 		for (int i = 0; i < stockAccounts.size(); i++) {
 			System.out.println("Account ID:	" + stockAccounts.get(i).getAccountSID());
