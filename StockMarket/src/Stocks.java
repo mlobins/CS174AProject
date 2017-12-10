@@ -4,7 +4,6 @@ public class Stocks {
 
 	private String stock_id;
 	private int ad_id;
-	private String ad_name;
 	private double closing_price;
 	private double current_price;
 
@@ -22,14 +21,6 @@ public class Stocks {
 	
 	public void setADID(int ad_id) {
 		this.ad_id = ad_id;
-	}
-	
-	public String getADName() {
-		return ad_name;
-	}
-
-	public void setADName(String ad_name) {
-		this.ad_name = ad_name;
 	}
 
 	public double getClosingPrice() {
@@ -51,7 +42,7 @@ public class Stocks {
 	// toString()
 	@Override
 	public String toString() {
-		return "Stocks [stock_id=" + stock_id + ", ad_name=" + ad_name + ", closing_price=" + closing_price
+		return "Stocks [stock_id=" + stock_id + ", closing_price=" + closing_price
 				+ ", current_price=" + current_price + "]";
 	}
 }

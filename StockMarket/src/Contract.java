@@ -3,7 +3,6 @@
 	public class Contract {
 		
 		private int ad_id;
-		private String ad_name;
 		private int contract_id;
 		private String movie_title;
 		private String role;
@@ -16,14 +15,6 @@
 		
 		public void setADID(int ad_id) {
 			this.ad_id = ad_id;
-		}
-		
-		public String getADName() {
-			return ad_name;
-		}
-		
-		public void setADName(String ad_name) {
-			this.ad_name = ad_name;
 		}
 		
 		public int getContractID() {
@@ -69,7 +60,7 @@
 		//toString()
 		@Override
 		public String toString() {
-			return "Contract [contract_id=" + contract_id + ", movie_title=" + movie_title + ", role="
+			return "Contract [ad_id=" + ad_id + ", contract_id=" + contract_id + ", movie_title=" + movie_title + ", role="
 					+ role + ", year=" + year + ", total_payment=" + total_payment + "]";
 		}
 	

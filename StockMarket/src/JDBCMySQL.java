@@ -3,11 +3,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Scanner;
 
-//toDo
-//check buy and sell accounts for 0! do not update transactions!
-//add foreign key constraints
-//reset increments
+//toD
 //report 
+//password
 
 public class JDBCMySQL {
 	public static void main(String[] args) {

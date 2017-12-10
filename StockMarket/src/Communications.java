@@ -34,7 +34,7 @@ public class Communications {
 
 	public static void createCustomerProfile() {
 		String query = "CREATE TABLE CustomerProfile " + "( username VARCHAR(25) NOT NULL PRIMARY KEY, "
-				+ "name VARCHAR(25), " + "state VARCHAR(2) NOT NULL, " + "phone_number VARCHAR(10) NOT NULL, "
+				+ "name VARCHAR(25) NOT NULL, " + "state VARCHAR(2) NOT NULL, " + "phone_number VARCHAR(10) NOT NULL, "
 				+ "email_address VARCHAR(25) NOT NULL, " + "taxid VARCHAR(25) NOT NULL, "
 				+ "password VARCHAR(25) NOT NULL " + ") ;";
 		System.out.printf("%s", query);
@@ -62,7 +62,7 @@ public class Communications {
 	}
 
 	public static void createStocks() {
-		String query = "CREATE TABLE Stocks " + "( stock_id CHAR(3), " + "ad_id INTEGER, ad_name CHAR(25), "
+		String query = "CREATE TABLE Stocks " + "( stock_id CHAR(3), " + "ad_id INTEGER "
 				+ "closing_price DOUBLE(6,2), " + "current_price DOUBLE(6,2), " + "PRIMARY KEY(stock_id) " +
 				// FOREIGN KEY(ad_id) REFERENCES ActorDirectorProfile (ad_id)
 				");";
@@ -79,7 +79,7 @@ public class Communications {
 
 	public static void createContract() {
 		String query = "CREATE TABLE Contract" + "( contract_id INTEGER AUTO_INCREMENT, " + "movie_title CHAR(255), "
-				+ "ad_id INTEGER, ad_name CHAR(25), " + "role CHAR(255), " + "year INTEGER, "
+				+ "ad_id INTEGER, " + "role CHAR(255), " + "year INTEGER, "
 				+ "total_payment DOUBLE(6,3), " + "PRIMARY KEY(contract_id),"
 				+ " FOREIGN KEY (ad_id) REFERENCES ActorDirectorProfile (ad_id)" + ");";
 		runQuery(query);
@@ -170,9 +170,9 @@ public class Communications {
 		runQuery(query);
 	}
 
-	public static void setStocks(int ad_id, String stock_id, String ad_name, int closing_price, int current_price) {
-		String query = "INSERT INTO Stocks (ad_id, stock_id, ad_name, closing_price, current_price) " + "VALUES (" + "\""
-				+ ad_id + "\"" + "," + "\"" + stock_id + "\"" + "," + "\"" + ad_name + "\"" + "," + "\"" + closing_price
+	public static void setStocks(int ad_id, String stock_id, int closing_price, int current_price) {
+		String query = "INSERT INTO Stocks (ad_id, stock_id, closing_price, current_price) " + "VALUES (" + "\""
+				+ ad_id + "\"" + "," + "\"" + stock_id + "\"" + "," + "\"" + closing_price
 				+ "\"" + "," + "\"" + current_price + "\"" + ");";
 		runQuery(query);
 	}
@@ -183,10 +183,10 @@ public class Communications {
 		runQuery(query);
 	}
 
-	public static void setContract(int ad_id, String ad_name, String movie_title, String role, int year,
+	public static void setContract(int ad_id, String movie_title, String role, int year,
 			int total_payment) {
-		String query = "INSERT INTO Contract (ad_id, ad_name, movie_title, role, year, total_payment) " + "VALUES ("
-				+ "\"" + ad_id + "\"" + "," + "\"" + ad_name + "\"" + "," + "\"" + movie_title + "\"" + "," + "\""
+		String query = "INSERT INTO Contract (ad_id, movie_title, role, year, total_payment) " + "VALUES ("
+				+ "\"" + ad_id + "\"" + "," + "\"" + movie_title + "\"" + "," + "\""
 				+ role + "\"" + "," + "\"" + year + "\"" + "," + "\"" + total_payment + "\"" + ");";
 		runQuery(query);
 	}
@@ -197,7 +197,7 @@ public class Communications {
 		String query = "INSERT INTO Transactions (transID, username, transaction_type, "
 				+ "stock_id, stock_quantity, buying_price, selling_price, deposit, withdraw, accrue_interest, dateOfTransaction)"
 				+ "VALUES (" + "\"" + transID + "\"" + "," + "\"" + username + "\"" + "," + "\"" + transaction_type
-				+ "\"" + "," + "," + "\"" + stock_id + "," + "\"" + stock_quantity + "\"" + "," + "\"" + buying_price
+				+ "\"" + "," + "\"" + stock_id + "," + "\"" + stock_quantity + "\"" + "," + "\"" + buying_price
 				+ "\"" + "," + "\"" + selling_price + "\"" + "," + "\"" + deposit + "\"" + "," + "\"" + withdraw + "\""
 				+ "," + "\"" + accrue_interest + "\"" + "," + "\"" + date + "\"" + ");";
 		runQuery(query);
@@ -395,7 +395,6 @@ public class Communications {
 				stock = new Stocks();
 				stock.setStockID(rs.getString("stock_id"));
 				stock.setADID(rs.getInt("ad_id"));
-				stock.setADName(rs.getString("ad_name"));
 				stock.setClosingPrice(rs.getInt("closing_price"));
 				stock.setCurrentPrice(rs.getInt("current_price"));
 			}
@@ -429,7 +428,6 @@ public class Communications {
 				stock = new Stocks();
 				stock.setStockID(rs.getString("stock_id"));
 				stock.setADID(rs.getInt("ad_id"));
-				stock.setADName(rs.getString("ad_name"));
 				stock.setClosingPrice(rs.getInt("closing_price"));
 				stock.setCurrentPrice(rs.getInt("current_price"));
 			}
@@ -464,7 +462,6 @@ public class Communications {
 				stock = new Stocks();
 				stock.setStockID(rs.getString("stock_id"));
 				stock.setADID(rs.getInt("ad_id"));
-				stock.setADName(rs.getString("ad_name"));
 				stock.setClosingPrice(rs.getInt("closing_price"));
 				stock.setCurrentPrice(rs.getInt("current_price"));
 				stocks.add(stock);
@@ -498,7 +495,6 @@ public class Communications {
 			if (rs.next()) {
 				actor_director = new ActorDirectorProfile();
 				actor_director.setADID(rs.getInt("ad_id"));
-				;
 				actor_director.setADName(rs.getString("ad_name"));
 				actor_director.setDOB(rs.getInt("dob"));
 			}
@@ -532,7 +528,6 @@ public class Communications {
 			while (rs.next()) {
 				actor_director = new ActorDirectorProfile();
 				actor_director.setADID(rs.getInt("ad_id"));
-				;
 				actor_director.setADName(rs.getString("ad_name"));
 				actor_director.setDOB(rs.getInt("dob"));
 				actor_directors.add(actor_director);
@@ -566,7 +561,6 @@ public class Communications {
 			if (rs.next()) {
 				contract = new Contract();
 				contract.setADID(rs.getInt("ad_id"));
-				contract.setADName(rs.getString("ad_name"));
 				contract.setContractID(rs.getInt("contract_id"));
 				contract.setMovieTitle(rs.getString("movie_title"));
 				contract.setRole(rs.getString("role"));
@@ -603,7 +597,6 @@ public class Communications {
 			while (rs.next()) {
 				contract = new Contract();
 				contract.setADID(rs.getInt("ad_id"));
-				contract.setADName(rs.getString("ad_name"));
 				contract.setContractID(rs.getInt("contract_id"));
 				contract.setMovieTitle(rs.getString("movie_title"));
 				contract.setRole(rs.getString("role"));

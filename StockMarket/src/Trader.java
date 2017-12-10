@@ -235,11 +235,13 @@ public class Trader {
 	}
 
 	private static void stockDisplay() {
+		ActorDirectorProfile profile;
 		List<Stocks> stocks = Communications.getStocks();
 		System.out.println("---------------------------------------------------------------");
 		for (int i = 0; i < stocks.size(); i++) {
 			System.out.println("Stock ID: " + stocks.get(i).getStockID());
-			System.out.println("Actor/Director Name: " + stocks.get(i).getADName());
+			profile = Communications.getActorDirectorProfile(stocks.get(i).getADID());
+			System.out.println("Actor/Director Name: " + profile.getADName());
 			System.out.println("Current Price: " + stocks.get(i).getCurrentPrice());
 			System.out.println("---------------------------------------------------------------");
 		}
